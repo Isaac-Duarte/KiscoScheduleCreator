@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiscoSchedule.WPF", "KiscoSchedule\KiscoSchedule.WPF.csproj", "{1866B5AF-722E-411F-BD18-511187EAEEF1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiscoSchedule", "KiscoSchedule\KiscoSchedule.csproj", "{1866B5AF-722E-411F-BD18-511187EAEEF1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiscoSchedule.Database", "KiscoSchedule.Database\KiscoSchedule.Database.csproj", "{73C1D79B-5B85-4A92-AB21-AE53DAAC4D79}"
 EndProject
