@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KiscoSchedule.Shared.Util
 {
-    public class File
+    public class FileUtil
     {
         /// <summary>
         /// This grabs the %appdata% folder.
