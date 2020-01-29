@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crypto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -56,6 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="database.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KiscoSchedule.Shared\KiscoSchedule.Shared.csproj">
+      <Project>{3ab0f068-dee5-496c-81a6-64907da67e08}</Project>
+      <Name>KiscoSchedule.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
