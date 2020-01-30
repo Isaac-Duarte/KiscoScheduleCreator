@@ -23,7 +23,7 @@ namespace KiscoSchedule.Shared.Models
         /// <summary>
         /// The inital of the name of the uesr
         /// </summary>
-        public char Inital;
+        char Inital { get; set; }
 
         /// <summary>
         /// The phone number of the employee

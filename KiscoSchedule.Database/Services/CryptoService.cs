@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
 
-namespace KiscoSchedule.Database
+namespace KiscoSchedule.Database.Services
 {
-    class CryptoService
+    public class CryptoService
     {
         RC2CryptoServiceProvider rc2;
         /// <summary>
@@ -81,7 +81,7 @@ namespace KiscoSchedule.Database
         /// </summary>
         /// <param name="rawBytes">The bytes wanting to be encrypted</param>
         /// <returns></returns>
-        private byte[] encryptBytes(byte[] rawBytes)
+        public byte[] EncryptBytes(byte[] rawBytes)
         {
             byte[] encryptedBytes;
 
@@ -101,7 +101,7 @@ namespace KiscoSchedule.Database
         /// </summary>
         /// <param name="encryptedBytes">The encrypted bytes wanted to be decrypted</param>
         /// <returns></returns>
-        private byte[] decryptBytes(byte[] encryptedBytes)
+        public byte[] DecryptBytes(byte[] encryptedBytes)
         {
             byte[] rawBytes;
 

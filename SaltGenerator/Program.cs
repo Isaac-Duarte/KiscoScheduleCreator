@@ -12,9 +12,16 @@ namespace SaltGenerator
         static void Main(string[] args)
         {
             Console.Write("How much salt do you want?: ");
-            
-            int saltLength = Int32.Parse(Console.ReadLine());
-            outputSalt(saltLength);
+
+            try
+            {
+                int saltLength = Int32.Parse(Console.ReadLine());
+                outputSalt(saltLength);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Stupid, you fukced it up!\n{ex.Message}");
+            }
 
             Console.ReadLine();
         }
