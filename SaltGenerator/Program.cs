@@ -11,17 +11,48 @@ namespace SaltGenerator
     {
         static void Main(string[] args)
         {
-            byte[] salt = GenerateSalt(64);
-            string hex = BitConverter.ToString(salt);
-            StringBuilder stringBuilder = new StringBuilder();
+            Console.Write("How much salt do you want?: ");
+            
+            int saltLength = Int32.Parse(Console.ReadLine());
+            outputSalt(saltLength);
 
-            foreach (string singleHex in hex.Split('-'))
+            Console.ReadLine();
+        }
+
+        private static void outputSalt(int saltLength)
+        {
+            byte[] salt = GenerateSalt(saltLength);
+            string hex = BitConverter.ToString(salt);
+            string[] hexes = hex.Split('-');
+            StringBuilder stringBuilder = new StringBuilder();
+            int maxLength = 10;
+            int currentLength = 0;
+
+            stringBuilder.Append("private readonly byte[] salt =\n{\n    ");
+
+            for (int i = 0; i < hexes.Length; i++)
             {
-                stringBuilder.Append("0x" + singleHex.Replace("-", string.Empty) + ", ");
+                string singleHex = hexes[i];
+
+                if (currentLength >= maxLength)
+                {
+                    currentLength = 0;
+                    stringBuilder.Append("\n    ");
+                }
+
+                if (i == hexes.Length - 1)
+                {
+                    stringBuilder.Append("0x" + singleHex);
+                    continue;
+                }
+
+                stringBuilder.Append("0x" + singleHex + ", ");
+                currentLength++;
             }
 
+            stringBuilder.Append("\n};");
+
             Console.WriteLine(stringBuilder.ToString());
-            Console.ReadLine();
         }
 
         static byte[] GenerateSalt(int length = 64)
