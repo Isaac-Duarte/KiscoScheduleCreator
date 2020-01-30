@@ -19,10 +19,6 @@ namespace KiscoSchedule.ViewModels
             // Locally set the singletons
             _events = events;
             _container = container;
-
-            DatabaseService database = new DatabaseService(FileUtil.GetAppDataFolder() + @"\KiscoSchedule", "database.db");
-            
-            database.OpenAsync();
         }
     }
 }
