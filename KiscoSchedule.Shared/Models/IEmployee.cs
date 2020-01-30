@@ -21,6 +21,11 @@ namespace KiscoSchedule.Shared.Models
         string Name { get; set; }
 
         /// <summary>
+        /// The inital of the name of the uesr
+        /// </summary>
+        public char Inital;
+
+        /// <summary>
         /// The phone number of the employee
         /// </summary>
         string PhoneNumber { get; set; }

@@ -21,10 +21,5 @@
         /// Hash of the user's password
         /// </summary>
         string Hash { get; set; }
-
-        /// <summary>
-        /// Salt of the user's encryption key
-        /// </summary>
-        byte[] Salt { get; set; }
     }
 }

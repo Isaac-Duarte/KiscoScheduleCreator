@@ -39,10 +39,5 @@ namespace KiscoSchedule.Shared.Models
         /// Hash of the user's password
         /// </summary>
         public string Hash { get; set; }
-
-        /// <summary>
-        /// Salt of the user's encryption key
-        /// </summary>
-        public byte[] Salt { get; set; }
     }
 }
