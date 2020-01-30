@@ -13,9 +13,31 @@ namespace KiscoSchedule.Database.Services
         private SQLiteConnection sqliteConnection;
 
         /// <summary>
+        /// Initalizes the database service
+        /// Sadly, the simple container doesn't allow for paramarter injection
+        /// </summary>
+        public DatabaseService()
+        {
+
+        }
+
+        /// <summary>
         /// Initalizer for SQLite Database
         /// </summary>
+        /// <param name="folderName">The folder name of the desiered database location</param>
+        /// <param name="databaseName">The sqlite database name</param>
         public DatabaseService(string folderName, string databaseName)
+        {
+            FileUtil.CreateFolder(folderName);
+            sqliteConnection = new SQLiteConnection($@"Data Source={folderName}\{databaseName};Version=3;");
+        }
+
+        /// <summary>
+        /// Creates a SQLite connection
+        /// </summary>
+        /// <param name="folderName">The folder name of the desiered database location</param>
+        /// <param name="databaseName">The sqlite database name</param>
+        public void CreateConnection(string folderName, string databaseName)
         {
             FileUtil.CreateFolder(folderName);
             sqliteConnection = new SQLiteConnection($@"Data Source={folderName}\{databaseName};Version=3;");
