@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace KiscoSchedule.Shared.Models
 {
-    public class Role : IRole
+    interface IShift
     {
         /// <summary>
-        /// SQLite Id of the Employee
+        /// SQLite Id of the shift.
         /// </summary>
-        public int Id { get; set; }
+        int Id { get; set; }
 
         /// <summary>
-        /// Name of the role
+        /// Name of the shift.
         /// </summary>
-        public string Name{ get; set; }
+        string Name { get; set; }
     }
 }
