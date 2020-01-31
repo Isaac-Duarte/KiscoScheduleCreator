@@ -117,6 +117,16 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
+        /// Encrypts bytes using RC2
+        /// </summary>
+        /// <param name="raw">The string wanting to be encrypted</param>
+        /// <returns></returns>
+        public byte[] EncryptString(string raw)
+        {
+            return EncryptBytes(Encoding.UTF8.GetBytes(raw));
+        }
+
+        /// <summary>
         /// Decrypts the byes using RC2 into a string
         /// </summary>
         /// <param name="encryptedBytes">The encrypted bytes wanted to be decrypted</param>

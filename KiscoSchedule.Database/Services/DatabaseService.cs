@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -224,11 +225,12 @@ namespace KiscoSchedule.Database.Services
         /// <param name="limit">The limit (page)</param>
         /// <param name="offset">Offset</param>
         /// <returns>List of employees</returns>
-        public async Task<List<IEmployee>> GetEmployeesAsync(int userId, int limit, int offset)
+        public async Task<List<IEmployee>> GetEmployeesAsync(IUser user, int limit, int offset)
         {
             List<IEmployee> employees = new List<IEmployee>();
 
             SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where UserId=@UserId LIMIT @Limit OFFSET @Offset");
+            command.Parameters.AddWithValue("UserId", user.Id);
             command.Parameters.AddWithValue("Limit", limit);
             command.Parameters.AddWithValue("Offset", offset);
 
@@ -243,12 +245,37 @@ namespace KiscoSchedule.Database.Services
                     Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]),
                     PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"]),
                     UnableWeekDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"])),
-                    PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"])),
+                    PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["PerferedWorkingDays"])),
                     UnableSpecificDays = stringToDateTimes(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]))
                 });
             }
 
             return employees;
+        }
+
+        /// <summary>
+        /// Adds an employee to the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="employee"></param>
+        public async Task AddEmployee(IUser user, IEmployee employee)
+        {
+            List<string> dateTimes = new List<string>();
+
+            foreach (DateTime dateTime in employee.UnableSpecificDays)
+            {
+                dateTimes.Add(dateTime.ToString("d", CultureInfo.CreateSpecificCulture("es-ES")));
+            }
+
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO Employees  (UserId, Name, PhoneNumber, PerferedWorkingDays, UnableWeekDays, UnableSpecificDays) VALUES(@UserId, @Name, @PhoneNumber, @PerferedWorkingDays, @UnableWeekDays, @UnableSpecificDays)", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+            command.Parameters.AddWithValue("Name", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.Name)));
+            command.Parameters.AddWithValue("PhoneNumber", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.PhoneNumber)));
+            command.Parameters.AddWithValue("PerferedWorkingDays", cryptoService.EncryptString(weekDaysToString(employee.PerferedWorkingDays)));
+            command.Parameters.AddWithValue("UnableWeekDays", cryptoService.EncryptString(weekDaysToString(employee.UnableWeekDays)));
+            command.Parameters.AddWithValue("UnableSpecificDays", cryptoService.EncryptString(dateTimeToString(employee.UnableSpecificDays)));
+
+            await command.ExecuteNonQueryAsync();
         }
     }
 }
