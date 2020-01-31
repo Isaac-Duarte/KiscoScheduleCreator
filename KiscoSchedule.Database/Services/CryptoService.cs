@@ -115,5 +115,15 @@ namespace KiscoSchedule.Database.Services
 
             return rawBytes;
         }
+
+        /// <summary>
+        /// Decrypts the byes using RC2 into a string
+        /// </summary>
+        /// <param name="encryptedBytes">The encrypted bytes wanted to be decrypted</param>
+        /// <returns></returns>
+        public string DecryptBytesToString(byte[] encryptedBytes)
+        {
+            return Encoding.UTF8.GetString(DecryptBytes(encryptedBytes));
+        }
     }
 }
