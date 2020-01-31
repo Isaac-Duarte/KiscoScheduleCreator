@@ -9,6 +9,8 @@ namespace KiscoSchedule.Shared.Models
 {
     public class User : IUser
     {
+        private string userName;
+
         /// <summary>
         /// This SQLite Id of the user
         /// </summary>
@@ -21,11 +23,11 @@ namespace KiscoSchedule.Shared.Models
         {
             get
             {
-                return UserName;
+                return userName;
             }
             set
             {
-                UserName = value;
+                userName = value;
                 Inital = Char.ToUpper(value[0], CultureInfo.CreateSpecificCulture("en-US"));
             }
         }

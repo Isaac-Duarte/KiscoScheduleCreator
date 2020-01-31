@@ -9,6 +9,8 @@ namespace KiscoSchedule.Shared.Models
 {
     public class Employee : IEmployee
     {
+        private string name { get; set; }
+
         /// <summary>
         /// SQLite Id of the Employee
         /// </summary>
@@ -26,11 +28,11 @@ namespace KiscoSchedule.Shared.Models
         {
             get
             {
-                return Name;
+                return name;
             }
             set
             {
-                Name = value;
+                name = value;
                 Inital = Char.ToUpper(value[0], CultureInfo.CreateSpecificCulture("en-US"));
             }
         }

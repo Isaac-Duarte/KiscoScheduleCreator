@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.Shared.Util;
+using KiscoSchedule.Shared.Models;
 
 namespace KiscoSchedule.ViewModels
 {

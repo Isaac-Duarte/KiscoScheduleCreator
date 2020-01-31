@@ -32,6 +32,7 @@ namespace KiscoSchedule.Database.Services
         /// <param name="databaseName">The sqlite database name</param>
         public DatabaseService(string folderName, string databaseName)
         {
+            cryptoService = new CryptoService();
             FileUtil.CreateFolder(folderName);
             sqliteConnection = new SQLiteConnection($@"Data Source={folderName}\{databaseName};Version=3;");
         }
@@ -60,7 +61,7 @@ namespace KiscoSchedule.Database.Services
 	            'PhoneNumber'	BLOB,
 	            'UnableWeekDays'	BLOB,
                 'PerferedWorkingDays'	BLOB,
-	            'UnableWorkDays'	BLOB,
+	            'UnableSpecificDays'	BLOB,
 	            'Roles'	BLOB
             );";
 
@@ -229,7 +230,7 @@ namespace KiscoSchedule.Database.Services
         {
             List<IEmployee> employees = new List<IEmployee>();
 
-            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where UserId=@UserId LIMIT @Limit OFFSET @Offset");
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where UserId=@UserId LIMIT @Limit OFFSET @Offset", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
             command.Parameters.AddWithValue("Limit", limit);
             command.Parameters.AddWithValue("Offset", offset);
@@ -254,11 +255,39 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
+        /// Grabs an employee from the database
+        /// </summary>
+        /// <param name="id">The Id of the employee</param>
+        /// <returns>List of employees</returns>
+        public async Task<IEmployee> GetEmployee(int id)
+        {
+            Employee employee = new Employee();
+
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", id);
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+
+            while (dataReader.Read())
+            {
+                employee.Id = dataReader.GetInt32(0);
+                employee.UserId = dataReader.GetInt32(1);
+                employee.Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]);
+                employee.PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"]);
+                employee.UnableWeekDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"]));
+                employee.PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["PerferedWorkingDays"]));
+                employee.UnableSpecificDays = stringToDateTimes(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]));
+            }
+
+            return employee;
+        }
+
+        /// <summary>
         /// Adds an employee to the database
         /// </summary>
         /// <param name="user"></param>
         /// <param name="employee"></param>
-        public async Task AddEmployee(IUser user, IEmployee employee)
+        public async Task CreateEmployeeAsync(IUser user, IEmployee employee)
         {
             List<string> dateTimes = new List<string>();
 

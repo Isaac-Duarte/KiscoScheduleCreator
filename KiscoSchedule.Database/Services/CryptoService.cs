@@ -60,7 +60,7 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="input">string wanting to be hashed</param>
         /// <returns>hash</returns>
-        public string Hash(string input)
+        public static string Hash(string input)
         {
             using (SHA256Managed sha2 = new SHA256Managed())
             {
