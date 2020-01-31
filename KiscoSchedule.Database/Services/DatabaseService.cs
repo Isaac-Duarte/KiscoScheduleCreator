@@ -217,13 +217,20 @@ namespace KiscoSchedule.Database.Services
             await command.ExecuteNonQueryAsync();
         }
 
-        public async Task<List<Employee>> GetEmployeesAsync(int userId, int limit, int page)
+        /// <summary>
+        /// Grabs a list of employees from the database
+        /// </summary>
+        /// <param name="userId">The parent id of the employee</param>
+        /// <param name="limit">The limit (page)</param>
+        /// <param name="offset">Offset</param>
+        /// <returns>List of employees</returns>
+        public async Task<List<IEmployee>> GetEmployeesAsync(int userId, int limit, int offset)
         {
             List<IEmployee> employees = new List<IEmployee>();
 
-            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where UserId=@UserId LIMIT @Limit OFFSET @Page");
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where UserId=@UserId LIMIT @Limit OFFSET @Offset");
             command.Parameters.AddWithValue("Limit", limit);
-            command.Parameters.AddWithValue("Page", page);
+            command.Parameters.AddWithValue("Offset", offset);
 
             DbDataReader dataReader = await command.ExecuteReaderAsync();
 
@@ -236,9 +243,12 @@ namespace KiscoSchedule.Database.Services
                     Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]),
                     PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"]),
                     UnableWeekDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"])),
-                    PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"]))
+                    PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"])),
+                    UnableSpecificDays = stringToDateTimes(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]))
                 });
             }
+
+            return employees;
         }
     }
 }
