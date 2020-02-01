@@ -11,7 +11,7 @@ using KiscoSchedule.Shared.Util;
 
 namespace KiscoSchedule.Database.Services
 {
-    public class DatabaseService
+    public class DatabaseService : IDatabaseService
     {
         private SQLiteConnection sqliteConnection;
         private CryptoService cryptoService;
@@ -71,8 +71,8 @@ namespace KiscoSchedule.Database.Services
             // Create Shift table
             queryString = @"CREATE TABLE IF NOT EXISTS 'Shifts' (
 	            'Id'	INTEGER PRIMARY KEY AUTOINCREMENT,
-	            'Name'	BLOB,
-	            'Roles'	BLOB
+                'UserId'    INTEGER
+	            'Name'	BLOB
             );";
 
             command = new SQLiteCommand(queryString, sqliteConnection);
@@ -81,6 +81,7 @@ namespace KiscoSchedule.Database.Services
             // Create Role table
             queryString = @"CREATE TABLE IF NOT EXISTS 'Roles' (
 	            'Id'	INTEGER PRIMARY KEY AUTOINCREMENT,
+                'UserId'    INTEGER
 	            'Name'	BLOB
             );";
 
@@ -90,66 +91,13 @@ namespace KiscoSchedule.Database.Services
             // Create Schedules table
             queryString = @"CREATE TABLE IF NOT EXISTS 'Schedules' (
 	            'Id'	INTEGER PRIMARY KEY AUTOINCREMENT,
+                'UserId'    INTEGER
 	            'Date'	BLOB,
 	            'Data'	BLOB
             );";
 
             command = new SQLiteCommand(queryString, sqliteConnection);
             await command.ExecuteNonQueryAsync();
-        }
-
-        /// <summary>
-        /// Converts a list of weeks days to a string
-        /// </summary>
-        /// <param name="weekDays">List wanting to be converted</param>
-        /// <returns></returns>
-        private string weekDaysToString(List<DayOfWeek> weekDays)
-        {
-            return String.Join(",", weekDays.ToArray());
-        }
-
-        /// <summary>
-        /// Converts a string to a list of week days
-        /// </summary>
-        /// <param name="weekDaysString">string wanting to be converted</param>
-        /// <returns></returns>
-        private List<DayOfWeek> stringToWeekDays(string weekDaysString)
-        {
-            List<DayOfWeek> weekDays = new List<DayOfWeek>();
-
-            foreach (string weekDay in weekDaysString.Split(','))
-            {
-                weekDays.Add((DayOfWeek)Enum.Parse(typeof(DayOfWeek), weekDay));
-            }
-
-            return weekDays;
-        }
-
-        /// <summary>
-        /// Converts a list of date times to a string
-        /// </summary>
-        /// <param name="dateTimes"></param>
-        /// <returns></returns>
-        private string dateTimeToString(List<DateTime> dateTimes)
-        {
-            return String.Join(",", dateTimes.ToArray());
-        }
-
-        /// <summary>
-        /// Converts a string to a list of date times
-        /// </summary>
-        /// <param name="dateTimesString">string wanting to be converted</param>
-        /// <returns></returns>
-        private List<DateTime> stringToDateTimes(string dateTimesString)
-        {
-            List<DateTime> dateTimes = new List<DateTime>();
-
-            foreach (string dateTime in dateTimesString.Split(','))
-            {
-                dateTimes.Add(DateTime.Parse(dateTime));
-            }
-
-            return dateTimes;
         }
 
         /// <summary>
@@ -245,9 +193,9 @@ namespace KiscoSchedule.Database.Services
                     UserId = dataReader.GetInt32(1),
                     Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]),
                     PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"]),
-                    UnableWeekDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"])),
-                    PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["PerferedWorkingDays"])),
-                    UnableSpecificDays = stringToDateTimes(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]))
+                    UnableWeekDays = Employee.ConvertWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"])),
+                    PerferedWorkingDays = Employee.ConvertWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["PerferedWorkingDays"])),
+                    UnableSpecificDays = Employee.ConvertUnableSpecificDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]))
                 });
             }
 
@@ -259,7 +207,7 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="id">The Id of the employee</param>
         /// <returns>List of employees</returns>
-        public async Task<IEmployee> GetEmployee(int id)
+        public async Task<IEmployee> GetEmployeeAsync(int id)
         {
             Employee employee = new Employee();
 
@@ -274,9 +222,9 @@ namespace KiscoSchedule.Database.Services
                 employee.UserId = dataReader.GetInt32(1);
                 employee.Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]);
                 employee.PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"]);
-                employee.UnableWeekDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"]));
-                employee.PerferedWorkingDays = stringToWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["PerferedWorkingDays"]));
-                employee.UnableSpecificDays = stringToDateTimes(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]));
+                employee.UnableWeekDays = Employee.ConvertWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableWeekDays"]));
+                employee.PerferedWorkingDays = Employee.ConvertWeekDays(cryptoService.DecryptBytesToString((byte[])dataReader["PerferedWorkingDays"]));
+                employee.UnableSpecificDays = Employee.ConvertUnableSpecificDays(cryptoService.DecryptBytesToString((byte[])dataReader["UnableSpecificDays"]));
             }
 
             return employee;
@@ -300,11 +248,93 @@ namespace KiscoSchedule.Database.Services
             command.Parameters.AddWithValue("UserId", user.Id);
             command.Parameters.AddWithValue("Name", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.Name)));
             command.Parameters.AddWithValue("PhoneNumber", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.PhoneNumber)));
-            command.Parameters.AddWithValue("PerferedWorkingDays", cryptoService.EncryptString(weekDaysToString(employee.PerferedWorkingDays)));
-            command.Parameters.AddWithValue("UnableWeekDays", cryptoService.EncryptString(weekDaysToString(employee.UnableWeekDays)));
-            command.Parameters.AddWithValue("UnableSpecificDays", cryptoService.EncryptString(dateTimeToString(employee.UnableSpecificDays)));
+            command.Parameters.AddWithValue("PerferedWorkingDays", cryptoService.EncryptString(Employee.ConvertWeekDays(employee.PerferedWorkingDays)));
+            command.Parameters.AddWithValue("UnableWeekDays", cryptoService.EncryptString(Employee.ConvertWeekDays(employee.UnableWeekDays)));
+            command.Parameters.AddWithValue("UnableSpecificDays", cryptoService.EncryptString(Employee.ConvertUnableSpecificDays(employee.UnableSpecificDays)));
 
             await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Creates a shift async
+        /// </summary>
+        /// <param name="user">The parent of the shift</param>
+        /// <param name="shift">The shift wanting to be created</param>
+        /// <returns></returns>
+        public async Task CreateShiftAsync(IUser user, IShift shift)
+        {
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO Shifts (UserId, Name) VALUES(@UserId, @Name)", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+            command.Parameters.AddWithValue("Name", cryptoService.EncryptString(shift.Name));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Generates a list of shifts from the databse
+        /// </summary>
+        /// <param name="user">User wanting to be added to</param>
+        /// <returns></returns>
+        public async Task<List<IShift>> GetShiftsAsync(IUser user)
+        {
+            SQLiteCommand command = new SQLiteCommand(@"SELECT * FROM Shifts WHERE UserId=@UserId", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+            List<IShift> shifts = new List<IShift>();
+
+            while (dataReader.Read())
+            {
+                shifts.Add(new Shift
+                {
+                    Id = dataReader.GetInt32(0),
+                    Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"])
+                });
+            }
+
+            return shifts;
+        }
+
+        /// <summary>
+        /// Creates a role async
+        /// </summary>
+        /// <param name="user">The parent of the role</param>
+        /// <param name="role"></param>
+        /// <returns></returns>
+        public async Task CreateRoleAsync(IUser user, IRole role)
+        {
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO Roles (UserId, Name, Shifts) VALUES(@UserId, @Name, @Shifts)", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+            command.Parameters.AddWithValue("Name", cryptoService.EncryptString(role.Name));
+            command.Parameters.AddWithValue("Shifts", cryptoService.EncryptString(Role.ConvertShifts(role.Shifts)));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Gets a list of roles
+        /// </summary>
+        /// <param name="user">Parent of user</param>
+        /// <returns></returns>
+        public async Task<List<IRole>> GetRolesAsync(IUser user)
+        {
+            SQLiteCommand command = new SQLiteCommand(@"SELECT * FROM Roles WHERE UserId=@UserId", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+            List<IRole> roles = new List<IRole>();
+
+            while (dataReader.Read())
+            {
+                roles.Add(new Role
+                {
+                    Id = dataReader.GetInt32(0),
+                    Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]),
+                    Shifts = Role.ConvertShifts(cryptoService.DecryptBytesToString((byte[])dataReader["Shifts"]))
+                });
+            }
+
+            return roles;
         }
     }
 }

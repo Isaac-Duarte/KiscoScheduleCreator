@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KiscoSchedule.Shared.Models
 {
-    class Shift : IShift
+    public class Shift : IShift
     {
         /// <summary>
         /// SQLite Id of the shift.

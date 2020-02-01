@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using KiscoSchedule.Database.Services;
 
 namespace KiscoSchedule
 {
@@ -30,7 +31,8 @@ namespace KiscoSchedule
             // Add required singletons
             container
                 .Singleton<IWindowManager, WindowManager>()
-                .Singleton<IEventAggregator, EventAggregator>();
+                .Singleton<IEventAggregator, EventAggregator>()
+                .Singleton<IDatabaseService, DatabaseService>();
 
             // Using LINQ combine the view with the view models
             GetType().Assembly.GetTypes()

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace KiscoSchedule.Shared.Models
 {
@@ -66,5 +67,52 @@ namespace KiscoSchedule.Shared.Models
         /// The roles of the user
         /// </summary>
         public List<Role> Roles { get; set; }
+
+        /// <summary>
+        /// Converts a list of dayofweek to json
+        /// </summary>
+        /// <param name="weekDays">list wanting to be converted</param>
+        /// <returns>converted string</returns>
+        public static string ConvertWeekDays(List<DayOfWeek> weekDays)
+        {
+            return JsonConvert.SerializeObject(weekDays);
+        }
+
+        /// <summary>
+        /// Converts json to day of week list
+        /// </summary>
+        /// <param name="weekDaysRaw"></param>
+        /// <returns></returns>
+        public static List<DayOfWeek> ConvertWeekDays(string weekDaysRaw)
+        {
+            return JsonConvert.DeserializeObject<List<DayOfWeek>>(weekDaysRaw);
+        }
+
+        /// <summary>
+        /// Converts a list of DateTime to json
+        /// </summary>
+        /// <param name="unableSpecificDays"></param>
+        /// <returns></returns>
+        public static string ConvertUnableSpecificDays(List<DateTime> unableSpecificDays)
+        {
+            return String.Join(",", unableSpecificDays.ToArray());
+        }
+
+        /// <summary>
+        /// Converts JSON to a list of DateTime
+        /// </summary>
+        /// <param name="unableSpecificDaysRaw"></param>
+        /// <returns></returns>
+        public static List<DateTime> ConvertUnableSpecificDays(string unableSpecificDaysRaw)
+        {
+            List<DateTime> unableSpecificDays = new List<DateTime>();
+
+            foreach (string dateTime in unableSpecificDaysRaw.Split(','))
+            {
+                unableSpecificDays.Add(DateTime.Parse(dateTime));
+            }
+
+            return unableSpecificDays;
+        }
     }
 }
