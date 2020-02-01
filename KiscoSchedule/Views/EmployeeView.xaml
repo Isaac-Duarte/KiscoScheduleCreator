@@ -17,24 +17,16 @@
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <materialDesign:Card Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2">
-            <ListBox x:Name="EmployeeListView" ItemsSource="{Binding Employees}">
+        <materialDesign:Card Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
+            <ListBox x:Name="EmployeeListView" ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}" >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -62,6 +54,22 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+        </materialDesign:Card>
+
+        <materialDesign:Card Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="0" Margin="10">
+            <Grid>
+                
+                <Button x:Name="Add"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="10">
+                    <materialDesign:PackIcon
+                                    Kind="Add"
+                                    Height="24"
+                                    Width="24" />
+                </Button>
+            </Grid>
         </materialDesign:Card>
     </Grid>
 </UserControl>

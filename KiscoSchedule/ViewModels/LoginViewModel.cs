@@ -158,13 +158,16 @@ namespace KiscoSchedule.ViewModels
 
                 Username = "";
                 Password = "";
-
             }
             catch (Exception e)
             {
                 if (e.HResult == -2147473489)
                 {
                     _events.PublishOnUIThread(new SnackBarEventModel($"There is already an existing user named {Username}!"));
+                }
+                else
+                {
+                    _events.PublishOnUIThread(new SnackBarEventModel($"Fatal error! {e.Message}"));
                 }
             }
         }
