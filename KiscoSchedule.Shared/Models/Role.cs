@@ -24,7 +24,6 @@ namespace KiscoSchedule.Shared.Models
         /// </summary>
         public List<Shift> Shifts { get; set; }
 
-
         /// <summary>
         /// Converts shifts to json
         /// </summary>

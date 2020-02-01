@@ -15,6 +15,7 @@ namespace KiscoSchedule.Database.Services
     {
         private SQLiteConnection sqliteConnection;
         private CryptoService cryptoService;
+        public string FolderPath { get; set; }
 
         /// <summary>
         /// Initalizes the database service
@@ -23,18 +24,6 @@ namespace KiscoSchedule.Database.Services
         public DatabaseService()
         {
             cryptoService = new CryptoService();
-        }
-
-        /// <summary>
-        /// Initalizer for SQLite Database
-        /// </summary>
-        /// <param name="folderName">The folder name of the desiered database location</param>
-        /// <param name="databaseName">The sqlite database name</param>
-        public DatabaseService(string folderName, string databaseName)
-        {
-            cryptoService = new CryptoService();
-            FileUtil.CreateFolder(folderName);
-            sqliteConnection = new SQLiteConnection($@"Data Source={folderName}\{databaseName};Version=3;");
         }
 
         /// <summary>
@@ -109,6 +98,7 @@ namespace KiscoSchedule.Database.Services
         {
             FileUtil.CreateFolder(folderName);
             sqliteConnection = new SQLiteConnection($@"Data Source={folderName}\{databaseName};Version=3;");
+            FolderPath = $@"{folderName}\{databaseName}";
         }
 
         /// <summary>

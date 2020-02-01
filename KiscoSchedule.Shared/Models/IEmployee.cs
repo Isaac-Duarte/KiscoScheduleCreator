@@ -49,33 +49,5 @@ namespace KiscoSchedule.Shared.Models
         /// The roles of the user
         /// </summary>
         List<Role> Roles { get; set; }
-
-        /// <summary>
-        /// Converts a list of dayofweek to json
-        /// </summary>
-        /// <param name="weekDays">list wanting to be converted</param>
-        /// <returns>converted string</returns>
-        string ConvertWeekDays(List<DayOfWeek> weekDays);
-
-        /// <summary>
-        /// Converts json to day of week list
-        /// </summary>
-        /// <param name="weekDaysRaw"></param>
-        /// <returns></returns>
-        List<DayOfWeek> ConvertWeekDays(string weekDaysRaw);
-
-        /// <summary>
-        /// Converts a list of DateTime to json
-        /// </summary>
-        /// <param name="unableSpecificDays"></param>
-        /// <returns></returns>
-        string ConvertUnableSpecificDays(List<DateTime> unableSpecificDays);
-
-        /// <summary>
-        /// Converts JSON to a list of DateTime
-        /// </summary>
-        /// <param name="unableSpecificDaysRaw"></param>
-        /// <returns></returns>
-        List<DateTime> ConvertUnableSpecificDays(string unableSpecificDaysRaw);
     }
 }

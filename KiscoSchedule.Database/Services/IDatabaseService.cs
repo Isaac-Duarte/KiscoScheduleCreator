@@ -7,6 +7,11 @@ namespace KiscoSchedule.Database.Services
     public interface IDatabaseService
     {
         /// <summary>
+        /// This wil the location of the database
+        /// </summary>
+        string FolderPath { get; set; }
+
+        /// <summary>
         /// Creates a SQLite connection
         /// </summary>
         /// <param name="folderName">The folder name of the desiered database location</param>

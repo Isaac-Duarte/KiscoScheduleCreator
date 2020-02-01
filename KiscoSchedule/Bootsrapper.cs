@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using KiscoSchedule.Database.Services;
+using KiscoSchedule.Shared.Models;
+using System.Windows.Controls;
+using KiscoSchedule.Services;
 
 namespace KiscoSchedule
 {
@@ -18,6 +21,11 @@ namespace KiscoSchedule
         public Bootstrapper()
         {
             Initialize();
+
+            ConventionManager.AddElementConvention<PasswordBox>(
+                PasswordBoxService.BoundPasswordProperty,
+                "Password",
+                "PasswordChanged");
         }
 
         /// <summary>
@@ -32,6 +40,7 @@ namespace KiscoSchedule
             container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
+                .Singleton<IUser, User>()
                 .Singleton<IDatabaseService, DatabaseService>();
 
             // Using LINQ combine the view with the view models

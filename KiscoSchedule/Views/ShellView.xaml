@@ -3,10 +3,73 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:KiscoSchedule.Views"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform" 
         mc:Ignorable="d"
-        Title="ShellView" Height="450" Width="800">
-    <Grid>
-        <ContentControl x:Name="ActiveItem" Grid.Row="1"/>
-    </Grid>
+        Title="Cedarwood Schedule Creator" Height="450" Width="800"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+
+    <materialDesign:DrawerHost Grid.Row="0" IsLeftDrawerOpen="{Binding LeftDrawerOpen}" IsEnabled="True">
+
+        <materialDesign:DrawerHost.LeftDrawerContent>
+            <StackPanel>
+                <ToggleButton cal:Message.Attach="ToggleHamburger"
+                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                    IsChecked="{Binding LeftDrawerOpen}"
+                                    IsEnabled="{Binding CanHamburgerMenu}"
+                                    HorizontalAlignment="Right" 
+                                    Margin="16"/>
+
+                <Button Content="Employees" x:Name="EmployeesControl" Margin="5" />
+                <Button Content="Shifts" x:Name="ShiftsControl" Margin="5" />
+                <Button Content="Schedule"  x:Name="SchedulesControl" Margin="5" />
+            </StackPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <materialDesign:ColorZone Grid.Row="0" Mode="PrimaryDark" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ToggleButton cal:Message.Attach="ToggleHamburger"
+                                      Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                      DockPanel.Dock="Top"
+                                      IsChecked="{Binding LeftDrawerOpen}"
+                                      IsEnabled="{Binding CanHamburgerMenu}"
+                                      HorizontalAlignment="Right" />
+
+                    <TextBlock Grid.ColumnSpan="3" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10 0 0 0" >Cedarwood Schedule Creator</TextBlock>
+                    <materialDesign:PopupBox Grid.Column="2" HorizontalAlignment="Right" Padding="10" StaysOpen="False">
+
+                        <Button x:Name="About" Margin="5 0 0 0" Padding="0 16" VerticalAlignment="Center" cal:Message.Attach="About">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Margin="0 0 4 0" Kind="About" VerticalAlignment="Center"/>
+                                <TextBlock>About</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </materialDesign:PopupBox>
+                </Grid>
+            </materialDesign:ColorZone>
+
+            <ContentControl x:Name="ActiveItem" Grid.Row="1"/>
+
+            <materialDesign:Snackbar  Grid.Row="1" x:Name="SnackBar" MessageQueue="{Binding SnackbarMessageQueue}" />
+        </Grid>
+    </materialDesign:DrawerHost>
 </Window>
