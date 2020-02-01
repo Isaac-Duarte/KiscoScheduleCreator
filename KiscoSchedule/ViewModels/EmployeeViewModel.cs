@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
+using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace KiscoSchedule.ViewModels
         private IDatabaseService _databaseService;
         private IEventAggregator _events;
         private IUser _user;
-        private List<IEmployee> employees;
+        private AsyncObservableCollection<IEmployee> employees;
 
         public EmployeeViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -24,8 +25,8 @@ namespace KiscoSchedule.ViewModels
             _events = events;
             _user = user;
 
-            employees = new List<IEmployee>();
-            loadEmployeesAsync(employees.Count, 10);
+            employees = new AsyncObservableCollection<IEmployee>();
+            loadEmployeesAsync(employees.Count, 50);
         }
 
         /// <summary>
@@ -34,8 +35,22 @@ namespace KiscoSchedule.ViewModels
         public async void loadEmployeesAsync(int offset, int limit)
         {
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Visible));
-            employees.AddRange(await _databaseService.GetEmployeesAsync(_user, limit, offset));
+            
+            List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user, limit, offset);
+
+            Employees.AddRange(newEmployees);
+
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Collapsed));
+        }
+
+        public AsyncObservableCollection<IEmployee> Employees
+        {
+            get { return employees; }
+            set
+            {
+                employees = value;
+                NotifyOfPropertyChange(() => Employees);
+            }
         }
     }
 }

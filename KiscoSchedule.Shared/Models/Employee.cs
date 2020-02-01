@@ -107,6 +107,11 @@ namespace KiscoSchedule.Shared.Models
         {
             List<DateTime> unableSpecificDays = new List<DateTime>();
 
+            if (String.IsNullOrEmpty(unableSpecificDaysRaw))
+            {
+                return unableSpecificDays;
+            }
+
             foreach (string dateTime in unableSpecificDaysRaw.Split(','))
             {
                 unableSpecificDays.Add(DateTime.Parse(dateTime));
