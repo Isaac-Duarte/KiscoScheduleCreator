@@ -26,10 +26,10 @@
                                     IsEnabled="{Binding CanHamburgerMenu}"
                                     HorizontalAlignment="Right" 
                                     Margin="16"/>
-
-                <Button Content="Employees" x:Name="EmployeesControl" Margin="5" />
+                <Button Content="Schedule"  x:Name="SchedulesControl"  Margin="5" />
+                <Button Content="Employees" x:Name="EmployeesControl" cal:Message.Attach="EmployeesControl" Margin="5" />
                 <Button Content="Shifts" x:Name="ShiftsControl" Margin="5" />
-                <Button Content="Schedule"  x:Name="SchedulesControl" Margin="5" />
+                <Button Content="Roles" x:Name="RolesControl" Margin="5" />
             </StackPanel>
         </materialDesign:DrawerHost.LeftDrawerContent>
 
@@ -70,6 +70,12 @@
             <ContentControl x:Name="ActiveItem" Grid.Row="1"/>
 
             <materialDesign:Snackbar  Grid.Row="1" x:Name="SnackBar" MessageQueue="{Binding SnackbarMessageQueue}" />
+
+            <ProgressBar
+                Visibility="{Binding ProgressVisibility}"
+                Grid.RowSpan="2"
+                Style="{StaticResource MaterialDesignCircularProgressBar}"
+                IsIndeterminate="True" />
         </Grid>
     </materialDesign:DrawerHost>
 </Window>

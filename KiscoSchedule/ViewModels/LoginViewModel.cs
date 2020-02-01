@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace KiscoSchedule.ViewModels
 {
@@ -95,6 +96,25 @@ namespace KiscoSchedule.ViewModels
         }
 
         /// <summary>
+        /// Called when the password box gets a keydown
+        /// </summary>
+        /// <param name="context"></param>
+        public void PasswordBoxEnter(ActionExecutionContext context)
+        {
+            if (!CanLogin)
+            {
+                return;
+            }
+
+            var keyArgs = context.EventArgs as KeyEventArgs;
+
+            if (keyArgs != null && keyArgs.Key == Key.Enter)
+            {
+                Login();
+            }
+        }
+
+        /// <summary>
         /// This will attempt to login given the login credentials
         /// </summary>
         public async void Login()
@@ -115,7 +135,8 @@ namespace KiscoSchedule.ViewModels
             _user.UserName = selectedUser.UserName;
 
             _events.PublishOnUIThread(new SnackBarEventModel("Success! Logging in!"));
-            _events.PublishOnUIThread(new EmployeeEventModel());
+            _events.PublishOnUIThread(new ScheduleEventModel());
+            _events.PublishOnUIThread(new HamburgerEventModel(true));
         }
 
         /// <summary>

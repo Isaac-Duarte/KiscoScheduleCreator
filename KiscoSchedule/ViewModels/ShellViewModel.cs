@@ -9,10 +9,11 @@ using KiscoSchedule.Shared.Util;
 using KiscoSchedule.Shared.Models;
 using MaterialDesignThemes.Wpf;
 using KiscoSchedule.EventModels;
+using System.Windows;
 
 namespace KiscoSchedule.ViewModels
 {
-    class ShellViewModel : Conductor<object>, IHandle<SnackBarEventModel>
+    class ShellViewModel : Conductor<object>, IHandle<SnackBarEventModel>, IHandle<HamburgerEventModel>, IHandle<ProgressEventModel>, IHandle<ScheduleEventModel>, IHandle<EmployeeEventModel>
     {
         private IEventAggregator _events;
         private SimpleContainer _container;
@@ -20,7 +21,7 @@ namespace KiscoSchedule.ViewModels
         private SnackbarMessageQueue snackbarMessageQueue;
         private bool canHamburgerMenu;
         private bool leftDrawerOpen;
-
+        private Visibility progressVisibility;
 
         public ShellViewModel(IEventAggregator events, SimpleContainer container, IDatabaseService databaseService)
         {
@@ -37,6 +38,8 @@ namespace KiscoSchedule.ViewModels
             snackbarMessageQueue.IgnoreDuplicate = true;
 
             ActivateItem(_container.GetInstance<LoginViewModel>());
+
+            ProgressVisibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -88,12 +91,61 @@ namespace KiscoSchedule.ViewModels
         }
 
         /// <summary>
+        /// Visibility of the progress bar
+        /// </summary>
+        public Visibility ProgressVisibility
+        { 
+            get { return progressVisibility; }
+            set
+            {
+                progressVisibility = value;
+                NotifyOfPropertyChange(() => ProgressVisibility);
+            }
+        }
+
+        /// <summary>
         /// Event to handle Snackbar notifications
         /// </summary>
         /// <param name="message"></param>
         public void Handle(SnackBarEventModel message)
         {
             SnackbarMessageQueue.Enqueue(message.Message);
+        }
+
+        /// <summary>
+        /// Event to handle Snackbar notifications
+        /// </summary>
+        /// <param name="message"></param>
+        public void Handle(HamburgerEventModel message)
+        {
+            CanHamburgerMenu = message.CanOpen;
+        }
+
+        /// <summary>
+        /// Event to handle Progress Bar
+        /// </summary>
+        /// <param name="message"></param>
+        public void Handle(ProgressEventModel message)
+        {
+            ProgressVisibility = message.Visibility;
+        }
+
+        /// <summary>
+        /// Event to handle changing views
+        /// </summary>
+        /// <param name="message"></param>
+        public void Handle(ScheduleEventModel message)
+        {
+            ActivateItem(_container.GetInstance<ScheduleViewModel>());
+        }
+
+        /// <summary>
+        /// Event to handle changing views
+        /// </summary>
+        /// <param name="message"></param>
+        public void Handle(EmployeeEventModel message)
+        {
+            ActivateItem(_container.GetInstance<EmployeeViewModel>());
         }
 
         /// <summary>
@@ -104,13 +156,21 @@ namespace KiscoSchedule.ViewModels
             LeftDrawerOpen = LeftDrawerOpen;
         }
 
-
         /// <summary>
         /// The about button handler
         /// </summary>
         public void About()
         {
-            System.Diagnostics.Process.Start("https://github.com/Isaac-Duarte/KiscoSchedule");
+            System.Diagnostics.Process.Start("https://github.com/Isaac-Duarte/KiscoScheduleCreator");
+        }
+
+        /// <summary>
+        /// Change the view to the schedule control
+        /// </summary>
+        public void EmployeesControl()
+        {
+            ActivateItem(_container.GetInstance<EmployeeViewModel>());
+            LeftDrawerOpen = false;
         }
     }
 }
