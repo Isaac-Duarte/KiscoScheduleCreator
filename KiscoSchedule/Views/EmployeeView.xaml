@@ -6,6 +6,7 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:KiscoSchedule.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -16,60 +17,63 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <DataGrid
+            ItemsSource="{Binding Employees}"
+            CanUserSortColumns="True"
+            CanUserAddRows="True"
+            AutoGenerateColumns="False"
+            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+            cal:Message.Attach="[Event ScrollChanged] = [Scroll($eventArgs)]"
+            materialDesign:DataGridAssist.ColumnHeaderPadding="8">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <materialDesign:Card Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
-            <ListBox x:Name="EmployeeListView" ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}" >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                    Content="{Binding Inital}"
-                                    HorizontalAlignment="Center"
-                                    Grid.Column="0"/>
-
-                            <StackPanel Grid.Column="1" Margin="10 0 0 0">
-                                <TextBlock Text="{Binding Name}" 
-                                           HorizontalAlignment="Left"
-                                           VerticalAlignment="Center"
-                                           FontWeight="Bold"/>
-
-                                <TextBlock Text="{Binding PhoneNumber}" 
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Left"/>
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </materialDesign:Card>
-
-        <materialDesign:Card Grid.Column="2" Grid.ColumnSpan="5" Grid.Row="0" Margin="10">
-            <Grid>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Click Me" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Binding="{Binding Id}"
+                    Header="Id"
+                    IsReadOnly="True"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
                 
-                <Button x:Name="Add"
+                <DataGridTextColumn
+                    Binding="{Binding Name}"
+                    Header="Name"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+
+                <DataGridTextColumn
+                    Binding="{Binding PhoneNumber}"
+                    Header="Phone Number"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+
+                <DataGridTemplateColumn Header="Test">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding ListDays}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button x:Name="Add"
                     Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="10">
-                    <materialDesign:PackIcon
-                                    Kind="Add"
-                                    Height="24"
-                                    Width="24" />
-                </Button>
-            </Grid>
-        </materialDesign:Card>
+                <materialDesign:PackIcon
+                    Kind="Add"
+                    Height="24"
+                    Width="24" />
+        </Button>
     </Grid>
 </UserControl>

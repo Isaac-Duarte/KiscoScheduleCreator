@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace KiscoSchedule.ViewModels
 {
@@ -18,7 +19,6 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private IUser _user;
         private AsyncObservableCollection<IEmployee> employees;
-        private bool canAdd;
         private IEmployee selectedEmployee;
 
         public EmployeeViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
@@ -26,10 +26,9 @@ namespace KiscoSchedule.ViewModels
             _databaseService = databaseHelper;
             _events = events;
             _user = user;
-            CanAdd = true;
 
             employees = new AsyncObservableCollection<IEmployee>();
-            loadEmployeesAsync(employees.Count, 50);
+            loadEmployeesAsync(employees.Count, 30);
         }
 
         /// <summary>
@@ -77,28 +76,42 @@ namespace KiscoSchedule.ViewModels
         /// </summary>
         public bool CanAdd
         {
-            get { return canAdd; }
-            set
+            get { return true; }
+        }
+
+        public List<string> ListDays
+        {
+            get
             {
-                canAdd = value;
-                NotifyOfPropertyChange(() => CanAdd);
+                return Enum.GetNames(typeof(DayOfWeek)).ToList<string>();
             }
         }
 
         /// <summary>
         /// Event for the add button
         /// </summary>
-        public void Add()
+        public async void Add()
         {
             Employee employee = new Employee
             {
-                Name = "New Employee"
+                Name = "New Employee",
+                PhoneNumber = "N/A",
+                PerferedWorkingDays = new List<DayOfWeek>(),
+                UnableWeekDays = new List<DayOfWeek>(),
+                UnableSpecificDays = new List<DateTime>(),
+                Roles = new List<Role>()
             };
+
+            await _databaseService.CreateEmployeeAsync(_user, employee);
 
             Employees.Add(employee);
 
             SelectedEmployee = employee;
-            CanAdd = false;
+        }
+
+        public void Scroll(ScrollChangedEventArgs e)
+        {
+
         }
     }
 }
