@@ -137,6 +137,10 @@ namespace KiscoSchedule.ViewModels
             };
 
             var result = await DialogHost.Show(view, "RootDialog");
+
+            if (result == null)
+                return;
+
             PreferredDialogViewModel context = (PreferredDialogViewModel)result;
 
             List<DayOfWeek> perferedWorkingDays = new List<DayOfWeek>();
@@ -151,6 +155,35 @@ namespace KiscoSchedule.ViewModels
 
             employee.PerferedWorkingDays = perferedWorkingDays;
             await _databaseService.UpdateEmployeePerferedWorkingDaysAsync(employee, perferedWorkingDays);
+        }
+
+        public async void UnableDialog(object dataContext)
+        {
+            Employee employee = dataContext as Employee;
+
+            var view = new PreferredDialogView
+            {
+                DataContext = new PreferredDialogViewModel(employee.UnableWeekDays)
+            };
+
+            var result = await DialogHost.Show(view, "RootDialog");
+            if (result == null)
+                return;
+
+            PreferredDialogViewModel context = (PreferredDialogViewModel)result;
+
+            List<DayOfWeek> unableWeekDays = new List<DayOfWeek>();
+
+            foreach (DayOfWeekCheck dayOfWeekCheck in context.Days)
+            {
+                if (dayOfWeekCheck.IsChecked)
+                {
+                    unableWeekDays.Add((DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayOfWeekCheck.Day));
+                }
+            }
+
+            employee.UnableWeekDays = unableWeekDays;
+            await _databaseService.UpdateEmployeeUnableWorkingDaysAsync(employee, unableWeekDays);
         }
 
         /// <summary>

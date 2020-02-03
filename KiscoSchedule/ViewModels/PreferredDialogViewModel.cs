@@ -55,5 +55,10 @@ namespace KiscoSchedule.ViewModels
         {
             DialogHost.CloseDialogCommand.Execute(this, null);
         }
+
+        public void Cancel()
+        {
+            DialogHost.CloseDialogCommand.Execute(null, null);
+        }
     }
 }

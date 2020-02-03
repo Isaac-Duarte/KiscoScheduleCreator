@@ -27,7 +27,7 @@
 
             <StackPanel Orientation="Horizontal">
                 <Button cal:Message.Attach="Submit" x:Name="Submit" Content="Submit" Margin="5"/>
-                <Button x:Name="Cancel" Content="Cancel" Margin="5"/>
+                <Button cal:Message.Attach="Cancel" x:Name="Cancel" Content="Cancel" Margin="5"/>
             </StackPanel>
         </StackPanel>
     </Grid>

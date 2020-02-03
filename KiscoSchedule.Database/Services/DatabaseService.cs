@@ -344,6 +344,21 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
+        /// Update Preferred Working Days 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="perferedWorkingDays"></param>
+        /// <returns></returns>
+        public async Task UpdateEmployeeUnableWorkingDaysAsync(IEmployee employee, List<DayOfWeek> unableWorkingDays)
+        {
+            SQLiteCommand command = new SQLiteCommand("UPDATE Employees SET UnableWeekDays = @UnableWeekDays WHERE Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", employee.Id);
+            command.Parameters.AddWithValue("UnableWeekDays", cryptoService.EncryptString(Employee.ConvertWeekDays(unableWorkingDays)));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
         /// Updates an employee (had to rush temp will fix later)
         /// </summary>
         /// <param name="employee"></param>

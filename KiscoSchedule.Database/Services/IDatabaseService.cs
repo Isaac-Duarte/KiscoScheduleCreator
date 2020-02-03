@@ -107,6 +107,14 @@ namespace KiscoSchedule.Database.Services
         Task UpdateEmployeePerferedWorkingDaysAsync(IEmployee employee, List<DayOfWeek> perferedWorkingDays);
 
         /// <summary>
+        /// Update Preferred Working Days 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="perferedWorkingDays"></param>
+        /// <returns></returns>
+        Task UpdateEmployeeUnableWorkingDaysAsync(IEmployee employee, List<DayOfWeek> unableWorkingDays);
+
+        /// <summary>
         /// Updates an employee (had to rush temp will fix later)
         /// </summary>
         /// <param name="employee"></param>
