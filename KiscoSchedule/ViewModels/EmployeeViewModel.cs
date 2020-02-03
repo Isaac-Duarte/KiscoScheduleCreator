@@ -21,7 +21,7 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private IUser _user;
         private AsyncObservableCollection<IEmployee> employees;
-        private IEmployee selectedEmployee;
+        private Employee selectedEmployee;
 
         public EmployeeViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -63,7 +63,7 @@ namespace KiscoSchedule.ViewModels
         /// <summary>
         /// The selected employee in the listview
         /// </summary>
-        public IEmployee SelectedEmployee
+        public Employee SelectedEmployee
         {
             get { return selectedEmployee; }
             set
@@ -111,21 +111,26 @@ namespace KiscoSchedule.ViewModels
             SelectedEmployee = employee;
         }
 
+        /// <summary>
+        /// Removes the employee
+        /// </summary>
+        public async void RemoveClick(object dataContext)
+        {
+                Employees.Remove(SelectedEmployee);
+        }
+
         public async void PreferredDialog(object dataContext)
         {
             Employee employee = dataContext as Employee;
 
             var view = new PreferredDialogView
             {
-                DataContext = new PreferredDialogViewModel()
+                DataContext = new PreferredDialogViewModel(employee.PerferedWorkingDays)
             };
 
-            var result = await DialogHost.Show(view, "RootDialog", ClosingEventHandler);
-        }
+            var result = await DialogHost.Show(view, "RootDialog");
 
-        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
-        {
-            Console.WriteLine("You can intercept the closing event, and cancel here.");
+            employee.PerferedWorkingDays = (List<DayOfWeek>) result;
         }
     }
 }

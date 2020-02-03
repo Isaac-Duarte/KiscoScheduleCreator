@@ -20,8 +20,10 @@
         <Grid>
             <DataGrid
             ItemsSource="{Binding Employees}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedEmployee}"
             CanUserSortColumns="True"
-            CanUserAddRows="True"
+            CanUserAddRows="False"
             AutoGenerateColumns="False"
             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
             cal:Message.Attach="[Event ScrollChanged] = [Scroll($eventArgs)]"
@@ -29,7 +31,7 @@
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Click Me" />
+                        <MenuItem cal:Message.Attach="[Event Click] = [Action RemoveClick($dataContext)]" Header="Remove" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 
