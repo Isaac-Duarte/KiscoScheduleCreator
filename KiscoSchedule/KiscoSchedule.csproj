@@ -94,6 +94,7 @@
     <Compile Include="Models\DayOfWeekCheck.cs" />
     <Compile Include="Services\AsyncObservableCollection.cs" />
     <Compile Include="Services\PasswordBoxService.cs" />
+    <Compile Include="Services\RoutedEventTrigger.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\PreferredDialogViewModel.cs" />

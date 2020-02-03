@@ -24,6 +24,7 @@ namespace KiscoSchedule.ViewModels
         private AsyncObservableCollection<IEmployee> employees;
         private Employee selectedEmployee;
         private bool dataGridCurrentlyUpdating;
+        private bool busyAddingEmployees;
 
         public EmployeeViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -32,14 +33,15 @@ namespace KiscoSchedule.ViewModels
             _user = user;
 
             employees = new AsyncObservableCollection<IEmployee>();
-            loadEmployeesAsync(employees.Count, 30);
+            loadEmployeesAsync(employees.Count, 10);
             dataGridCurrentlyUpdating = false;
+            busyAddingEmployees = false;
         }
 
         /// <summary>
         /// Loads the employees
         /// </summary>
-        public async void loadEmployeesAsync(int offset, int limit)
+        public async Task<int> loadEmployeesAsync(int offset, int limit)
         {
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Visible));
             
@@ -48,6 +50,8 @@ namespace KiscoSchedule.ViewModels
             Employees.AddRange(newEmployees);
 
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Collapsed));
+
+            return newEmployees.Count;
         }
 
         /// <summary>
@@ -89,6 +93,25 @@ namespace KiscoSchedule.ViewModels
             get
             {
                 return Enum.GetNames(typeof(DayOfWeek)).ToList<string>();
+            }
+        }
+
+        /// <summary>
+        /// Called when the datagrid is scolled
+        /// </summary>
+        /// <param name="e"></param>
+        public async void DoScroll(ScrollChangedEventArgs e)
+        {
+            var scrollViewer = e.OriginalSource as ScrollViewer;
+            if (scrollViewer != null &&  scrollViewer.ScrollableHeight > 0 && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight && !busyAddingEmployees)
+            {
+                busyAddingEmployees = true;
+                int amount = await loadEmployeesAsync(employees.Count, 10);
+
+                if (amount > 0)
+                {
+                    busyAddingEmployees = false;
+                }
             }
         }
 

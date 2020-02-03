@@ -6,6 +6,7 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:KiscoSchedule.Views"
+             xmlns:services="clr-namespace:KiscoSchedule.Services"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -26,8 +27,15 @@
             CanUserAddRows="False"
             AutoGenerateColumns="False"
             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-            cal:Message.Attach="[Event ScrollChanged] = [Scroll($eventArgs)]; [Event RowEditEnding] = [Action DataGrid_RowEditEnding($source, $this, $eventArgs)]"
+            cal:Message.Attach="[Event RowEditEnding] = [Action DataGrid_RowEditEnding($source, $this, $eventArgs)]"
             materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+                <i:Interaction.Triggers>
+                    <services:RoutedEventTrigger RoutedEvent="ScrollViewer.ScrollChanged">
+                        <cal:ActionMessage MethodName="DoScroll">
+                            <cal:Parameter Value="$eventargs" />
+                        </cal:ActionMessage>
+                    </services:RoutedEventTrigger>
+                </i:Interaction.Triggers>
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -65,7 +73,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="Unable Working Days">
+                    <DataGridTemplateColumn Header="Unable Week Days">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button
