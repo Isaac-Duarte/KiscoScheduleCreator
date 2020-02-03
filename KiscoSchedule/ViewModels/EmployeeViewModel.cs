@@ -3,6 +3,8 @@ using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
 using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
+using KiscoSchedule.Views;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -109,9 +111,21 @@ namespace KiscoSchedule.ViewModels
             SelectedEmployee = employee;
         }
 
-        public void Scroll(ScrollChangedEventArgs e)
+        public async void PreferredDialog(object dataContext)
         {
+            Employee employee = dataContext as Employee;
 
+            var view = new PreferredDialogView
+            {
+                DataContext = new PreferredDialogViewModel()
+            };
+
+            var result = await DialogHost.Show(view, "RootDialog", ClosingEventHandler);
+        }
+
+        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            Console.WriteLine("You can intercept the closing event, and cancel here.");
         }
     }
 }

@@ -16,8 +16,9 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <DataGrid
+    <materialDesign:DialogHost Identifier="RootDialog">
+        <Grid>
+            <DataGrid
             ItemsSource="{Binding Employees}"
             CanUserSortColumns="True"
             CanUserAddRows="True"
@@ -26,46 +27,45 @@
             cal:Message.Attach="[Event ScrollChanged] = [Scroll($eventArgs)]"
             materialDesign:DataGridAssist.ColumnHeaderPadding="8">
 
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Click Me" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        
-            <DataGrid.Columns>
-                <DataGridTextColumn
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Click Me" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn
                     Binding="{Binding Id}"
                     Header="Id"
                     IsReadOnly="True"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                
-                <DataGridTextColumn
+
+                    <DataGridTextColumn
                     Binding="{Binding Name}"
                     Header="Name"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
 
-                <DataGridTextColumn
+                    <DataGridTextColumn
                     Binding="{Binding PhoneNumber}"
                     Header="Phone Number"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
 
-                <DataGridTemplateColumn Header="Test">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding ListDays}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGridTemplateColumn Header="Preferred Working Days">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                cal:Message.Attach="[Event Click] = [Action PreferredDialog($dataContext)]"
+                                Width="128">
+                                    Select Days
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
-        <Button x:Name="Add"
+            <Button x:Name="Add"
                     Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
@@ -74,6 +74,7 @@
                     Kind="Add"
                     Height="24"
                     Width="24" />
-        </Button>
-    </Grid>
+            </Button>
+        </Grid>
+    </materialDesign:DialogHost>
 </UserControl>
