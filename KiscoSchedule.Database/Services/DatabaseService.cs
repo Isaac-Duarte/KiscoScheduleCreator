@@ -225,7 +225,7 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="user"></param>
         /// <param name="employee"></param>
-        public async Task CreateEmployeeAsync(IUser user, IEmployee employee)
+        public async Task<long> CreateEmployeeAsync(IUser user, IEmployee employee)
         {
             List<string> dateTimes = new List<string>();
 
@@ -243,6 +243,7 @@ namespace KiscoSchedule.Database.Services
             command.Parameters.AddWithValue("UnableSpecificDays", cryptoService.EncryptString(Employee.ConvertUnableSpecificDays(employee.UnableSpecificDays)));
 
             await command.ExecuteNonQueryAsync();
+            return sqliteConnection.LastInsertRowId;
         }
 
         /// <summary>
@@ -325,6 +326,50 @@ namespace KiscoSchedule.Database.Services
             }
 
             return roles;
+        }
+
+        /// <summary>
+        /// Update Preferred Working Days 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="perferedWorkingDays"></param>
+        /// <returns></returns>
+        public async Task UpdateEmployeePerferedWorkingDaysAsync(IEmployee employee, List<DayOfWeek> perferedWorkingDays)
+        {
+            SQLiteCommand command = new SQLiteCommand("UPDATE Employees SET PerferedWorkingDays = @perferedWorkingDays WHERE Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", employee.Id);
+            command.Parameters.AddWithValue("perferedWorkingDays", cryptoService.EncryptString(Employee.ConvertWeekDays(perferedWorkingDays)));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Updates an employee (had to rush temp will fix later)
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        public async Task UpdateEmployeeAsync(IEmployee employee)
+        {
+            SQLiteCommand command = new SQLiteCommand("UPDATE Employees SET Name = @Name, PhoneNumber = @PhoneNumber WHERE Id = @Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", employee.Id);
+            command.Parameters.AddWithValue("Name", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.Name)));
+            command.Parameters.AddWithValue("PhoneNumber", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.PhoneNumber)));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Deletes an employee from the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        public async Task DeleteEmployeeAsync(IEmployee employee)
+        {
+            SQLiteCommand command = new SQLiteCommand("DELETE FROM Employees WHERE Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", employee.Id);
+
+            await command.ExecuteNonQueryAsync();
         }
     }
 }

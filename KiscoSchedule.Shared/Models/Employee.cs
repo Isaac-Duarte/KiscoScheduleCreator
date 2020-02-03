@@ -15,7 +15,7 @@ namespace KiscoSchedule.Shared.Models
         /// <summary>
         /// SQLite Id of the Employee
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// SQLite Id of the User which owns this employee

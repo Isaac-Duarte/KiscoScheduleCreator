@@ -1,4 +1,5 @@
 ﻿using KiscoSchedule.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -65,7 +66,7 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="user"></param>
         /// <param name="employee"></param>
-        Task CreateEmployeeAsync(IUser user, IEmployee employee);
+        Task<long> CreateEmployeeAsync(IUser user, IEmployee employee);
 
         /// <summary>
         /// Creates a shift async
@@ -96,5 +97,28 @@ namespace KiscoSchedule.Database.Services
         /// <param name="user">Parent of user</param>
         /// <returns></returns>
         Task<List<IRole>> GetRolesAsync(IUser user);
+
+        /// <summary>
+        /// Update Preferred Working Days 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="perferedWorkingDays"></param>
+        /// <returns></returns>
+        Task UpdateEmployeePerferedWorkingDaysAsync(IEmployee employee, List<DayOfWeek> perferedWorkingDays);
+
+        /// <summary>
+        /// Updates an employee (had to rush temp will fix later)
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        Task UpdateEmployeeAsync(IEmployee employee);
+
+        /// <summary>
+        /// Deletes an employee from the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        Task DeleteEmployeeAsync(IEmployee employee);
     }
 }

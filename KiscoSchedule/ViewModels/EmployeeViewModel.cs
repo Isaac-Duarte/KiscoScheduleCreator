@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
+using KiscoSchedule.Models;
 using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
 using KiscoSchedule.Views;
@@ -22,6 +23,7 @@ namespace KiscoSchedule.ViewModels
         private IUser _user;
         private AsyncObservableCollection<IEmployee> employees;
         private Employee selectedEmployee;
+        private bool dataGridCurrentlyUpdating;
 
         public EmployeeViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -31,6 +33,7 @@ namespace KiscoSchedule.ViewModels
 
             employees = new AsyncObservableCollection<IEmployee>();
             loadEmployeesAsync(employees.Count, 30);
+            dataGridCurrentlyUpdating = false;
         }
 
         /// <summary>
@@ -104,7 +107,8 @@ namespace KiscoSchedule.ViewModels
                 Roles = new List<Role>()
             };
 
-            await _databaseService.CreateEmployeeAsync(_user, employee);
+            long id = await _databaseService.CreateEmployeeAsync(_user, employee);
+            employee.Id = id;
 
             Employees.Add(employee);
 
@@ -116,7 +120,11 @@ namespace KiscoSchedule.ViewModels
         /// </summary>
         public async void RemoveClick(object dataContext)
         {
-                Employees.Remove(SelectedEmployee);
+            if (SelectedEmployee == null)
+                return;
+            
+            await _databaseService.DeleteEmployeeAsync(SelectedEmployee);
+            Employees.Remove(SelectedEmployee);
         }
 
         public async void PreferredDialog(object dataContext)
@@ -129,8 +137,49 @@ namespace KiscoSchedule.ViewModels
             };
 
             var result = await DialogHost.Show(view, "RootDialog");
+            PreferredDialogViewModel context = (PreferredDialogViewModel)result;
 
-            employee.PerferedWorkingDays = (List<DayOfWeek>) result;
+            List<DayOfWeek> perferedWorkingDays = new List<DayOfWeek>();
+
+            foreach (DayOfWeekCheck dayOfWeekCheck in context.Days)
+            {
+                if (dayOfWeekCheck.IsChecked)
+                {
+                    perferedWorkingDays.Add((DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayOfWeekCheck.Day));
+                }
+            }
+
+            employee.PerferedWorkingDays = perferedWorkingDays;
+            await _databaseService.UpdateEmployeePerferedWorkingDaysAsync(employee, perferedWorkingDays);
+        }
+
+        /// <summary>
+        /// Event for editing the datagrid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="employeeObj"></param>
+        /// <param name="e"></param>
+        public async void DataGrid_RowEditEnding(object sender, object employeeObj,  DataGridRowEditEndingEventArgs e)
+        {
+            if (sender == null)
+                return;
+
+            if (!dataGridCurrentlyUpdating)
+            {
+                dataGridCurrentlyUpdating = true;
+                DataGrid dataGrid = (DataGrid)sender;
+
+                dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
+                dataGrid.Items.Refresh();
+                dataGridCurrentlyUpdating = false;
+            }
+
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                Employee employee = (Employee)employeeObj;
+
+                await _databaseService.UpdateEmployeeAsync(employee);
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KiscoSchedule.ViewModels
 {
-    class PreferredDialogViewModel : Screen
+    public class PreferredDialogViewModel : Screen
     {
         private List<DayOfWeekCheck> days;
 

@@ -26,12 +26,13 @@
             CanUserAddRows="False"
             AutoGenerateColumns="False"
             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-            cal:Message.Attach="[Event ScrollChanged] = [Scroll($eventArgs)]"
+            cal:Message.Attach="[Event ScrollChanged] = [Scroll($eventArgs)]; [Event RowEditEnding] = [Action DataGrid_RowEditEnding($source, $this, $eventArgs)]"
             materialDesign:DataGridAssist.ColumnHeaderPadding="8">
 
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem cal:Message.Attach="[Event Click] = [Action RemoveClick($dataContext)]" Header="Remove" />
+                        <MenuItem cal:Message.Attach="[Event Click] = [Action UpdateClick($dataContext)]" Header="Update" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 
