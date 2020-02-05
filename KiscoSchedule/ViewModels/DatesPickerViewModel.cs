@@ -9,5 +9,21 @@ namespace KiscoSchedule.ViewModels
 {
     class DatesPickerViewModel : Screen
     {
+        private List<DateTime> dateTimes;
+
+        public DatesPickerViewModel(List<DateTime> dateTimes)
+        {
+            DateTimes = dateTimes;
+        }
+
+        public List<DateTime> DateTimes
+        {
+            get { return dateTimes; }
+            set
+            {
+                dateTimes = value;
+                NotifyOfPropertyChange(() => DateTimes);
+            }
+        }
     }
 }

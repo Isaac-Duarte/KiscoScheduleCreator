@@ -217,6 +217,21 @@ namespace KiscoSchedule.ViewModels
             await _databaseService.UpdateEmployeeUnableWorkingDaysAsync(employee, unableWeekDays);
         }
 
+        public async void UnableSpecificDays(object dataContext)
+        {
+            Employee employee = dataContext as Employee;
+
+            var view = new DatesPickerView
+            {
+                DataContext = new DatesPickerViewModel(new List<DateTime>
+                {
+                    DateTime.Now
+                })
+            };
+
+            await DialogHost.Show(view, "RootDialog");
+        }
+
         /// <summary>
         /// Event for editing the datagrid
         /// </summary>

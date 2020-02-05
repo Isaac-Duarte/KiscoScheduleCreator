@@ -93,6 +93,7 @@
     <Compile Include="EventModels\SnackBarEventModel.cs" />
     <Compile Include="Models\DayOfWeekCheck.cs" />
     <Compile Include="Services\AsyncObservableCollection.cs" />
+    <Compile Include="Services\FutureDateValidationRule.cs" />
     <Compile Include="Services\PasswordBoxService.cs" />
     <Compile Include="Services\RoutedEventTrigger.cs" />
     <Compile Include="ViewModels\DatesPickerViewModel.cs" />
