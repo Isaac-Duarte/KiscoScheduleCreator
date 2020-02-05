@@ -91,6 +91,7 @@
     <Compile Include="EventModels\HamburgerEventModel.cs" />
     <Compile Include="EventModels\ProgressEventModel.cs" />
     <Compile Include="EventModels\SnackBarEventModel.cs" />
+    <Compile Include="Models\DatePickerModel.cs" />
     <Compile Include="Models\DayOfWeekCheck.cs" />
     <Compile Include="Services\AsyncObservableCollection.cs" />
     <Compile Include="Services\FutureDateValidationRule.cs" />

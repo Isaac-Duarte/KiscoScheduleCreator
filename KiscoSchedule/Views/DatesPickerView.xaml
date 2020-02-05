@@ -17,33 +17,41 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <DataGrid
-            ItemsSource="{Binding DateTimes}"
-            CanUserSortColumns="True"
-            CanUserAddRows="False"
-            AutoGenerateColumns="False"
-            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-            materialDesign:DataGridAssist.ColumnHeaderPadding="8">
+        <StackPanel>
+            <DataGrid
+                Margin="2"
+                ItemsSource="{Binding DateTimes}"
+                CanUserSortColumns="True"
+                HorizontalAlignment="Center"
+                CanUserAddRows="False"
+                AutoGenerateColumns="False"
+                materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                Padding="2">
 
 
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Unable Work Days">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <DatePicker x:Name="FutureDatePicker" Width="100"
-                                materialDesign:HintAssist.Hint="Future Date">
-                                <DatePicker.SelectedDate>
-                                    <Binding Path="FutureValidatingDate" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <services:FutureDateValidationRule ValidatesOnTargetUpdated="True" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </DatePicker.SelectedDate>
-                            </DatePicker>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Unable Work Days">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DatePicker x:Name="FutureDatePicker"
+                                    Margin="2"
+                                    materialDesign:HintAssist.Hint="Future Date">
+                                    <DatePicker.SelectedDate>
+                                        <Binding Path="DateTime">
+                                        </Binding>
+                                    </DatePicker.SelectedDate>
+                                </DatePicker>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button cal:Message.Attach="Submit" x:Name="Submit" Content="Submit" Margin="5"/>
+                <Button cal:Message.Attach="Cancel" x:Name="Cancel" Content="Cancel" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -223,9 +223,16 @@ namespace KiscoSchedule.ViewModels
 
             var view = new DatesPickerView
             {
-                DataContext = new DatesPickerViewModel(new List<DateTime>
+                DataContext = new DatesPickerViewModel(new List<DatePickerModel>
                 {
-                    DateTime.Now
+                    new DatePickerModel
+                    {
+                        DateTime = DateTime.Now
+                    },
+                    new DatePickerModel
+                    {
+                        DateTime = DateTime.Now.AddDays(1)
+                    }
                 })
             };
 

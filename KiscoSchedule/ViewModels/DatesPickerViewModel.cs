@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using KiscoSchedule.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,14 @@ namespace KiscoSchedule.ViewModels
 {
     class DatesPickerViewModel : Screen
     {
-        private List<DateTime> dateTimes;
+        private List<DatePickerModel> dateTimes;
 
-        public DatesPickerViewModel(List<DateTime> dateTimes)
+        public DatesPickerViewModel(List<DatePickerModel> dateTimes)
         {
             DateTimes = dateTimes;
         }
 
-        public List<DateTime> DateTimes
+        public List<DatePickerModel> DateTimes
         {
             get { return dateTimes; }
             set
