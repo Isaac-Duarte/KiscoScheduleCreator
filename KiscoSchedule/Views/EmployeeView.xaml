@@ -65,8 +65,7 @@
                             <DataTemplate>
                                 <Button
                                 Style="{StaticResource MaterialDesignFlatButton}"
-                                cal:Message.Attach="[Event Click] = [Action PreferredDialog($dataContext)]"
-                                Width="128">
+                                cal:Message.Attach="[Event Click] = [Action PreferredDialog($dataContext)]">
                                     Select Days
                                 </Button>
                             </DataTemplate>
@@ -78,9 +77,31 @@
                             <DataTemplate>
                                 <Button
                                 Style="{StaticResource MaterialDesignFlatButton}"
-                                cal:Message.Attach="[Event Click] = [Action UnableDialog($dataContext)]"
-                                Width="128">
+                                cal:Message.Attach="[Event Click] = [Action UnableDialog($dataContext)]">
                                     Select Days
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Unable Work Days">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                cal:Message.Attach="[Event Click] = [Action UnableSpecificDays($dataContext)]">
+                                    Select Days
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Roles">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                Style="{StaticResource MaterialDesignFlatButton}">
+                                    Select Roles
                                 </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

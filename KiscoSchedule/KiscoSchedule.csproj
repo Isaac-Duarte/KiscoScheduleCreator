@@ -95,11 +95,15 @@
     <Compile Include="Services\AsyncObservableCollection.cs" />
     <Compile Include="Services\PasswordBoxService.cs" />
     <Compile Include="Services\RoutedEventTrigger.cs" />
+    <Compile Include="ViewModels\DatesPickerViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\PreferredDialogViewModel.cs" />
     <Compile Include="ViewModels\ScheduleViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="Views\DatesPickerView.xaml.cs">
+      <DependentUpon>DatesPickerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
     </Compile>
@@ -156,6 +160,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\DatesPickerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EmployeeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

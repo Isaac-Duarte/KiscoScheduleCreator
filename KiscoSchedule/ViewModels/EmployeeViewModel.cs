@@ -150,6 +150,10 @@ namespace KiscoSchedule.ViewModels
             Employees.Remove(SelectedEmployee);
         }
 
+        /// <summary>
+        /// The event for the preferred dialog button
+        /// </summary>
+        /// <param name="dataContext"></param>
         public async void PreferredDialog(object dataContext)
         {
             Employee employee = dataContext as Employee;
@@ -180,6 +184,10 @@ namespace KiscoSchedule.ViewModels
             await _databaseService.UpdateEmployeePerferedWorkingDaysAsync(employee, perferedWorkingDays);
         }
 
+        /// <summary>
+        /// Event for the unable button in the datagrid
+        /// </summary>
+        /// <param name="dataContext"></param>
         public async void UnableDialog(object dataContext)
         {
             Employee employee = dataContext as Employee;
