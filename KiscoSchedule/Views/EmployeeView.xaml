@@ -59,53 +59,6 @@
                     Binding="{Binding PhoneNumber}"
                     Header="Phone Number"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-
-                    <DataGridTemplateColumn Header="Preferred Working Days">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                cal:Message.Attach="[Event Click] = [Action PreferredDialog($dataContext)]">
-                                    Select Days
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Unable Week Days">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                cal:Message.Attach="[Event Click] = [Action UnableDialog($dataContext)]">
-                                    Select Days
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Unable Work Days">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                cal:Message.Attach="[Event Click] = [Action UnableSpecificDays($dataContext)]">
-                                    Select Days
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Roles">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button
-                                Style="{StaticResource MaterialDesignFlatButton}">
-                                    Select Roles
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 

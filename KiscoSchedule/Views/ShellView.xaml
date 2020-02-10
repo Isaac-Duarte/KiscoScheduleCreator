@@ -28,8 +28,6 @@
                                     Margin="16"/>
                 <Button Content="Schedule"  x:Name="SchedulesControl"  Margin="5" Style="{StaticResource MaterialDesignFlatButton}" />
                 <Button Content="Employees" x:Name="EmployeesControl" cal:Message.Attach="EmployeesControl" Margin="5" Style="{StaticResource MaterialDesignFlatButton}" />
-                <Button Content="Shifts" x:Name="ShiftsControl" Margin="5" Style="{StaticResource MaterialDesignFlatButton}" />
-                <Button Content="Roles" x:Name="RolesControl" Margin="5" Style="{StaticResource MaterialDesignFlatButton}" />
             </StackPanel>
         </materialDesign:DrawerHost.LeftDrawerContent>
 

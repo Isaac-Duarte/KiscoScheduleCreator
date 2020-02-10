@@ -8,7 +8,7 @@ namespace KiscoSchedule.Database.Services
     public interface IDatabaseService
     {
         /// <summary>
-        /// This wil the location of the database
+        /// The path of the database
         /// </summary>
         string FolderPath { get; set; }
 
@@ -67,60 +67,6 @@ namespace KiscoSchedule.Database.Services
         /// <param name="user"></param>
         /// <param name="employee"></param>
         Task<long> CreateEmployeeAsync(IUser user, IEmployee employee);
-
-        /// <summary>
-        /// Creates a shift async
-        /// </summary>
-        /// <param name="user">The parent of the shift</param>
-        /// <param name="shift">The shift wanting to be created</param>
-        /// <returns></returns>
-        Task CreateShiftAsync(IUser user, IShift shift);
-
-        /// <summary>
-        /// Generates a list of shifts from the databse
-        /// </summary>
-        /// <param name="user">User wanting to be added to</param>
-        /// <returns></returns>
-        Task<List<IShift>> GetShiftsAsync(IUser user);
-
-        /// <summary>
-        /// Creates a role async
-        /// </summary>
-        /// <param name="user">The parent of the role</param>
-        /// <param name="role"></param>
-        /// <returns></returns>
-        Task CreateRoleAsync(IUser user, IRole role);
-
-        /// <summary>
-        /// Gets a list of roles
-        /// </summary>
-        /// <param name="user">Parent of user</param>
-        /// <returns></returns>
-        Task<List<IRole>> GetRolesAsync(IUser user);
-
-        /// <summary>
-        /// Update Preferred Working Days 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="perferedWorkingDays"></param>
-        /// <returns></returns>
-        Task UpdateEmployeePerferedWorkingDaysAsync(IEmployee employee, List<DayOfWeek> perferedWorkingDays);
-
-        /// <summary>
-        /// Update Preferred Working Days 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="perferedWorkingDays"></param>
-        /// <returns></returns>
-        Task UpdateEmployeeUnableWorkingDaysAsync(IEmployee employee, List<DayOfWeek> unableWorkingDays);
-
-        /// <summary>
-        /// Update unable specfic working days
-        /// </summary>
-        /// <param name="employee"></param>
-        /// <param name="dateTimes"></param>
-        /// <returns></returns>
-        Task UpdateEmployeeUnableSpecificDaysAsync(IEmployee employee, List<DateTime> dateTimes);
 
         /// <summary>
         /// Updates an employee (had to rush temp will fix later)

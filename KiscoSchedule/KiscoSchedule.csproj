@@ -91,29 +91,19 @@
     <Compile Include="EventModels\HamburgerEventModel.cs" />
     <Compile Include="EventModels\ProgressEventModel.cs" />
     <Compile Include="EventModels\SnackBarEventModel.cs" />
-    <Compile Include="Models\DatePickerModel.cs" />
-    <Compile Include="Models\DayOfWeekCheck.cs" />
     <Compile Include="Services\AsyncObservableCollection.cs" />
     <Compile Include="Services\FutureDateValidationRule.cs" />
     <Compile Include="Services\PasswordBoxService.cs" />
     <Compile Include="Services\RoutedEventTrigger.cs" />
-    <Compile Include="ViewModels\DatesPickerViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\PreferredDialogViewModel.cs" />
     <Compile Include="ViewModels\ScheduleViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Views\DatesPickerView.xaml.cs">
-      <DependentUpon>DatesPickerView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PreferredDialogView.xaml.cs">
-      <DependentUpon>PreferredDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ScheduleView.xaml.cs">
       <DependentUpon>ScheduleView.xaml</DependentUpon>
@@ -162,19 +152,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\DatesPickerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\EmployeeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PreferredDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

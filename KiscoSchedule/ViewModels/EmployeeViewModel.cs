@@ -1,7 +1,6 @@
 ﻿using Caliburn.Micro;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
-using KiscoSchedule.Models;
 using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
 using KiscoSchedule.Views;
@@ -107,6 +106,7 @@ namespace KiscoSchedule.ViewModels
             {
                 busyAddingEmployees = true;
                 int amount = await loadEmployeesAsync(employees.Count, 10);
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - 1d);
 
                 if (amount > 0)
                 {
@@ -123,11 +123,7 @@ namespace KiscoSchedule.ViewModels
             Employee employee = new Employee
             {
                 Name = "New Employee",
-                PhoneNumber = "N/A",
-                PerferedWorkingDays = new List<DayOfWeek>(),
-                UnableWeekDays = new List<DayOfWeek>(),
-                UnableSpecificDays = new List<DateTime>(),
-                Roles = new List<Role>()
+                PhoneNumber = "N/A"
             };
 
             long id = await _databaseService.CreateEmployeeAsync(_user, employee);
@@ -148,107 +144,6 @@ namespace KiscoSchedule.ViewModels
             
             await _databaseService.DeleteEmployeeAsync(SelectedEmployee);
             Employees.Remove(SelectedEmployee);
-        }
-
-        /// <summary>
-        /// The event for the preferred dialog button
-        /// </summary>
-        /// <param name="dataContext"></param>
-        public async void PreferredDialog(object dataContext)
-        {
-            Employee employee = dataContext as Employee;
-
-            var view = new PreferredDialogView
-            {
-                DataContext = new PreferredDialogViewModel(employee.PerferedWorkingDays)
-            };
-
-            var result = await DialogHost.Show(view, "RootDialog");
-
-            if (result == null)
-                return;
-
-            PreferredDialogViewModel context = (PreferredDialogViewModel)result;
-
-            List<DayOfWeek> perferedWorkingDays = new List<DayOfWeek>();
-
-            foreach (DayOfWeekCheck dayOfWeekCheck in context.Days)
-            {
-                if (dayOfWeekCheck.IsChecked)
-                {
-                    perferedWorkingDays.Add((DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayOfWeekCheck.Day));
-                }
-            }
-
-            employee.PerferedWorkingDays = perferedWorkingDays;
-            await _databaseService.UpdateEmployeePerferedWorkingDaysAsync(employee, perferedWorkingDays);
-        }
-
-        /// <summary>
-        /// Event for the unable button in the datagrid
-        /// </summary>
-        /// <param name="dataContext"></param>
-        public async void UnableDialog(object dataContext)
-        {
-            Employee employee = dataContext as Employee;
-
-            var view = new PreferredDialogView
-            {
-                DataContext = new PreferredDialogViewModel(employee.UnableWeekDays)
-            };
-
-            var result = await DialogHost.Show(view, "RootDialog");
-            if (result == null)
-                return;
-
-            PreferredDialogViewModel context = (PreferredDialogViewModel)result;
-
-            List<DayOfWeek> unableWeekDays = new List<DayOfWeek>();
-
-            foreach (DayOfWeekCheck dayOfWeekCheck in context.Days)
-            {
-                if (dayOfWeekCheck.IsChecked)
-                {
-                    unableWeekDays.Add((DayOfWeek)Enum.Parse(typeof(DayOfWeek), dayOfWeekCheck.Day));
-                }
-            }
-
-            employee.UnableWeekDays = unableWeekDays;
-            await _databaseService.UpdateEmployeeUnableWorkingDaysAsync(employee, unableWeekDays);
-        }
-
-        /// <summary>
-        /// Dialog event for unable specific days
-        /// </summary>
-        /// <param name="dataContext"></param>
-        public async void UnableSpecificDays(object dataContext)
-        {
-            Employee employee = dataContext as Employee;
-            List<DatePickerModel> datePickerModels = new List<DatePickerModel>();
-
-            foreach (DateTime dateTime in employee.UnableSpecificDays)
-            {
-                datePickerModels.Add(new DatePickerModel(dateTime));
-            }
-
-            var view = new DatesPickerView
-            {
-                DataContext = new DatesPickerViewModel(datePickerModels)
-            };
-
-            var result = await DialogHost.Show(view, "RootDialog");
-
-            if (result == null)
-                return;
-
-            DatesPickerViewModel context = (DatesPickerViewModel)result;
-
-            // First LINQ epxression...
-            List<DateTime> dateTimes = new List<DateTime>();
-            context.DateTimes.ForEach(dateModel => dateTimes.Add(dateModel.DateTime));
-
-            employee.UnableSpecificDays = dateTimes;
-            await _databaseService.UpdateEmployeeUnableSpecificDaysAsync(employee, dateTimes);
         }
 
         /// <summary>
