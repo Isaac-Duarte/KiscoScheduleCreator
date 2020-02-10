@@ -359,6 +359,21 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
+        /// Update unable specfic working days
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="dateTimes"></param>
+        /// <returns></returns>
+        public async Task UpdateEmployeeUnableSpecificDaysAsync(IEmployee employee, List<DateTime> dateTimes)
+        {
+            SQLiteCommand command = new SQLiteCommand("UPDATE Employees SET UnableSpecificDays = @UnableSpecificDays WHERE Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", employee.Id);
+            command.Parameters.AddWithValue("UnableSpecificDays", cryptoService.EncryptString(Employee.ConvertUnableSpecificDays(dateTimes)));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
         /// Updates an employee (had to rush temp will fix later)
         /// </summary>
         /// <param name="employee"></param>

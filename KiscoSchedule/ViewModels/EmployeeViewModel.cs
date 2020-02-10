@@ -217,26 +217,38 @@ namespace KiscoSchedule.ViewModels
             await _databaseService.UpdateEmployeeUnableWorkingDaysAsync(employee, unableWeekDays);
         }
 
+        /// <summary>
+        /// Dialog event for unable specific days
+        /// </summary>
+        /// <param name="dataContext"></param>
         public async void UnableSpecificDays(object dataContext)
         {
             Employee employee = dataContext as Employee;
+            List<DatePickerModel> datePickerModels = new List<DatePickerModel>();
+
+            foreach (DateTime dateTime in employee.UnableSpecificDays)
+            {
+                datePickerModels.Add(new DatePickerModel(dateTime));
+            }
 
             var view = new DatesPickerView
             {
-                DataContext = new DatesPickerViewModel(new List<DatePickerModel>
-                {
-                    new DatePickerModel
-                    {
-                        DateTime = DateTime.Now
-                    },
-                    new DatePickerModel
-                    {
-                        DateTime = DateTime.Now.AddDays(1)
-                    }
-                })
+                DataContext = new DatesPickerViewModel(datePickerModels)
             };
 
-            await DialogHost.Show(view, "RootDialog");
+            var result = await DialogHost.Show(view, "RootDialog");
+
+            if (result == null)
+                return;
+
+            DatesPickerViewModel context = (DatesPickerViewModel)result;
+
+            // First LINQ epxression...
+            List<DateTime> dateTimes = new List<DateTime>();
+            context.DateTimes.ForEach(dateModel => dateTimes.Add(dateModel.DateTime));
+
+            employee.UnableSpecificDays = dateTimes;
+            await _databaseService.UpdateEmployeeUnableSpecificDaysAsync(employee, dateTimes);
         }
 
         /// <summary>

@@ -115,6 +115,14 @@ namespace KiscoSchedule.Database.Services
         Task UpdateEmployeeUnableWorkingDaysAsync(IEmployee employee, List<DayOfWeek> unableWorkingDays);
 
         /// <summary>
+        /// Update unable specfic working days
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="dateTimes"></param>
+        /// <returns></returns>
+        Task UpdateEmployeeUnableSpecificDaysAsync(IEmployee employee, List<DateTime> dateTimes);
+
+        /// <summary>
         /// Updates an employee (had to rush temp will fix later)
         /// </summary>
         /// <param name="employee"></param>

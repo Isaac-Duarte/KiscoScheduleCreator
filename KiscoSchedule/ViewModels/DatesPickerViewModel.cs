@@ -17,6 +17,9 @@ namespace KiscoSchedule.ViewModels
             DateTimes = dateTimes;
         }
 
+        /// <summary>
+        /// List of Date Time for UnableSpecific Work Days
+        /// </summary>
         public List<DatePickerModel> DateTimes
         {
             get { return dateTimes; }

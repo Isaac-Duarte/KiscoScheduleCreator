@@ -10,6 +10,10 @@ namespace KiscoSchedule.Models
     {
         private DateTime dateTime;
 
+        public DatePickerModel(DateTime dateTime)
+        {
+            DateTime = dateTime;
+        }
         public DateTime DateTime
         {
             get { return dateTime; }
