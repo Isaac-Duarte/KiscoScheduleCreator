@@ -13,11 +13,6 @@
         string UserName { get; set; }
 
         /// <summary>
-        /// The inital of a username
-        /// </summary>
-        char Inital { get; set; }
-
-        /// <summary>
         /// Hash of the user's password
         /// </summary>
         string Hash { get; set; }

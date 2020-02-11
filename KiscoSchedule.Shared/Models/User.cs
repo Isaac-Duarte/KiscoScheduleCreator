@@ -28,14 +28,8 @@ namespace KiscoSchedule.Shared.Models
             set
             {
                 userName = value;
-                Inital = Char.ToUpper(value[0], CultureInfo.CreateSpecificCulture("en-US"));
             }
         }
-
-        /// <summary>
-        /// The inital of a username
-        /// </summary>
-        public char Inital { get; set; }
 
         /// <summary>
         /// Hash of the user's password

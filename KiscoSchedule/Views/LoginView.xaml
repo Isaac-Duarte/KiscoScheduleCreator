@@ -47,8 +47,18 @@
             </Grid.ColumnDefinitions>
 
             <!-- Username Control -->
-            <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="Account" VerticalAlignment="Center" Margin="8 0 0 0"/>
-            <TextBlock  Grid.Row="0" Grid.Column="1" Text="Username" VerticalAlignment="Center" Margin="8 0 0 0"/>
+            <materialDesign:PackIcon 
+                Grid.Row="0" 
+                Grid.Column="0" 
+                Kind="Account" 
+                VerticalAlignment="Center" 
+                Margin="8 0 0 0"/>
+            <TextBlock 
+                Grid.Row="0" 
+                Grid.Column="1" 
+                Text="Username" 
+                VerticalAlignment="Center" 
+                Margin="8 0 0 0"/>
 
             <TextBox x:Name="Username"
                      materialDesign:HintAssist.Hint="Username"
@@ -59,9 +69,18 @@
                      Margin="8 0 0 0"/>
 
             <!-- Password Control -->
-            <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Key" VerticalAlignment="Center" Margin="8 0 0 0"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="Password" VerticalAlignment="Center" Margin="8 0 0 0"/>
-
+            <materialDesign:PackIcon 
+                Grid.Row="1" 
+                Grid.Column="0" 
+                Kind="Key" 
+                VerticalAlignment="Center" 
+                Margin="8 0 0 0"/>
+            <TextBlock 
+                Grid.Row="1" 
+                Grid.Column="1" 
+                Text="Password" 
+                VerticalAlignment="Center"
+                Margin="8 0 0 0"/>
             <PasswordBox x:Name="Password"
                          Grid.Row="1" 
                          Grid.Column="2"

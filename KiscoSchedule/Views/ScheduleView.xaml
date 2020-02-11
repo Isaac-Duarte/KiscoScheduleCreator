@@ -16,6 +16,11 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-            
+        <DataGrid>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{Binding Month}" />
+                
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

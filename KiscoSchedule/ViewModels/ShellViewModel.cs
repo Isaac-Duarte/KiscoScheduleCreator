@@ -18,17 +18,19 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private SimpleContainer _container;
         private IDatabaseService _databaseService;
+        private IUser _user;
         private SnackbarMessageQueue snackbarMessageQueue;
         private bool canHamburgerMenu;
         private bool leftDrawerOpen;
         private Visibility progressVisibility;
 
-        public ShellViewModel(IEventAggregator events, SimpleContainer container, IDatabaseService databaseService)
+        public ShellViewModel(IEventAggregator events, SimpleContainer container, IDatabaseService databaseService, IUser user)
         {
             // Locally set the singletons
             _events = events;
             _container = container;
             _databaseService = databaseService;
+            _user = user;
 
             _events.Subscribe(this);
 
@@ -165,11 +167,31 @@ namespace KiscoSchedule.ViewModels
         }
 
         /// <summary>
+        /// This will logout the client
+        /// </summary>
+        public void Logout()
+        {
+            ActivateItem(_container.GetInstance<LoginViewModel>());
+            LeftDrawerOpen = false;
+            CanHamburgerMenu = false;
+            _databaseService.SetPassword("");
+            _user.Hash = "";
+            _user.Id = 0;
+            _user.UserName = "";
+        }
+
+        /// <summary>
         /// Change the view to the schedule control
         /// </summary>
         public void EmployeesControl()
         {
             ActivateItem(_container.GetInstance<EmployeeViewModel>());
+            LeftDrawerOpen = false;
+        }
+
+        public void ScheduleControl()
+        {
+            ActivateItem(_container.GetInstance<ScheduleViewModel>());
             LeftDrawerOpen = false;
         }
     }

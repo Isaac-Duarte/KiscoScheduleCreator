@@ -16,18 +16,36 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
 
-    <materialDesign:DrawerHost Grid.Row="0" IsLeftDrawerOpen="{Binding LeftDrawerOpen}" IsEnabled="True">
-
+    <materialDesign:DrawerHost 
+        Grid.Row="0" 
+        IsLeftDrawerOpen="{Binding LeftDrawerOpen}" 
+        IsEnabled="True">
         <materialDesign:DrawerHost.LeftDrawerContent>
             <StackPanel>
-                <ToggleButton cal:Message.Attach="ToggleHamburger"
-                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                                    IsChecked="{Binding LeftDrawerOpen}"
-                                    IsEnabled="{Binding CanHamburgerMenu}"
-                                    HorizontalAlignment="Right" 
-                                    Margin="16"/>
-                <Button Content="Schedule"  x:Name="SchedulesControl"  Margin="5" Style="{StaticResource MaterialDesignFlatButton}" />
-                <Button Content="Employees" x:Name="EmployeesControl" cal:Message.Attach="EmployeesControl" Margin="5" Style="{StaticResource MaterialDesignFlatButton}" />
+                <ToggleButton 
+                    cal:Message.Attach="ToggleHamburger"
+                    Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                    IsChecked="{Binding LeftDrawerOpen}"
+                    IsEnabled="{Binding CanHamburgerMenu}"
+                    HorizontalAlignment="Right" 
+                    Margin="16"/>
+                
+                <Button 
+                    Content="Schedule" 
+                    cal:Message.Attach="ScheduleControl"
+                    Margin="5" 
+                    Style="{StaticResource MaterialDesignFlatButton}" />
+
+                <Button 
+                    Content="Employees" 
+                    cal:Message.Attach="EmployeesControl" 
+                    Margin="5" 
+                    Style="{StaticResource MaterialDesignFlatButton}" />
+
+                <Button 
+                    Content="Settings" 
+                    Margin="5" 
+                    Style="{StaticResource MaterialDesignFlatButton}" />
             </StackPanel>
         </materialDesign:DrawerHost.LeftDrawerContent>
 
@@ -37,7 +55,10 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <materialDesign:ColorZone Grid.Row="0" Mode="PrimaryDark" materialDesign:ShadowAssist.ShadowDepth="Depth3">
+            <materialDesign:ColorZone 
+                Grid.Row="0" 
+                Mode="PrimaryDark"
+                materialDesign:ShadowAssist.ShadowDepth="Depth3">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -45,29 +66,65 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <ToggleButton cal:Message.Attach="ToggleHamburger"
-                                      Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                                      DockPanel.Dock="Top"
-                                      IsChecked="{Binding LeftDrawerOpen}"
-                                      IsEnabled="{Binding CanHamburgerMenu}"
-                                      HorizontalAlignment="Right" />
+                    <ToggleButton 
+                        cal:Message.Attach="ToggleHamburger"
+                        Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                        DockPanel.Dock="Top"
+                        IsChecked="{Binding LeftDrawerOpen}"
+                        IsEnabled="{Binding CanHamburgerMenu}"              
+                        HorizontalAlignment="Right" />
 
-                    <TextBlock Grid.ColumnSpan="3" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10 0 0 0" >Cedarwood Schedule Creator</TextBlock>
-                    <materialDesign:PopupBox Grid.Column="2" HorizontalAlignment="Right" Padding="10" StaysOpen="False">
+                    <TextBlock 
+                        Grid.ColumnSpan="3"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" 
+                        Margin="10 0 0 0"
+                        Text="Cedarwood At Sandy"/>
+                    
+                    <materialDesign:PopupBox 
+                        Grid.Column="2" 
+                        HorizontalAlignment="Right" 
+                        Padding="10" 
+                        StaysOpen="False" >
+                        <StackPanel>
+                            <Button 
+                                Margin="5 0 0 0" 
+                                Padding="0 16" 
+                                VerticalAlignment="Center"
+                                cal:Message.Attach="About">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon 
+                                        Margin="0 0 4 0" 
+                                        Kind="About" 
+                                        VerticalAlignment="Center"/>
+                                    <TextBlock>About</TextBlock>
+                                </StackPanel>
+                            </Button>
 
-                        <Button x:Name="About" Margin="5 0 0 0" Padding="0 16" VerticalAlignment="Center" cal:Message.Attach="About">
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Margin="0 0 4 0" Kind="About" VerticalAlignment="Center"/>
-                                <TextBlock>About</TextBlock>
-                            </StackPanel>
-                        </Button>
+                            <Button 
+                                Margin="5 0 0 0" 
+                                Padding="0 16" 
+                                VerticalAlignment="Center" 
+                                cal:Message.Attach="Logout">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Margin="0 0 4 0" Kind="ExitRun" VerticalAlignment="Center"/>
+                                    <TextBlock>Logout</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
                     </materialDesign:PopupBox>
                 </Grid>
             </materialDesign:ColorZone>
 
-            <ContentControl x:Name="ActiveItem" Grid.Row="1"/>
+            <ContentControl 
+                x:Name="ActiveItem" 
+                Grid.Row="1"/>
 
-            <materialDesign:Snackbar  Grid.Row="1" x:Name="SnackBar" MessageQueue="{Binding SnackbarMessageQueue}" />
+            <materialDesign:Snackbar 
+                Grid.Row="1" 
+                x:Name="SnackBar" 
+                MessageQueue="{Binding SnackbarMessageQueue}" />
 
             <ProgressBar
                 Visibility="{Binding ProgressVisibility}"

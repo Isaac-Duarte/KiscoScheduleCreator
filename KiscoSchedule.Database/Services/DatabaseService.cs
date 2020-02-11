@@ -199,7 +199,7 @@ namespace KiscoSchedule.Database.Services
         {
             List<string> dateTimes = new List<string>();
 
-            SQLiteCommand command = new SQLiteCommand("INSERT INTO Employees (UserId, Name, PhoneNumber) VALUES(@UserId, @Name, @PhoneNumber, @PerferedWorkingDays, @UnableWeekDays, @UnableSpecificDays)", sqliteConnection);
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO Employees (UserId, Name, PhoneNumber) VALUES(@UserId, @Name, @PhoneNumber)", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
             command.Parameters.AddWithValue("Name", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.Name)));
             command.Parameters.AddWithValue("PhoneNumber", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.PhoneNumber)));
