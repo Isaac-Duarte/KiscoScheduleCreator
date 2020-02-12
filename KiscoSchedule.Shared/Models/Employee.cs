@@ -34,14 +34,8 @@ namespace KiscoSchedule.Shared.Models
             set
             {
                 name = value;
-                Inital = Char.ToUpper(value[0], CultureInfo.CreateSpecificCulture("en-US"));
             }
         }
-
-        /// <summary>
-        /// The inital of the name of the uesr
-        /// </summary>
-        public char Inital { get; set; }
 
         /// <summary>
         /// The phone number of the employee

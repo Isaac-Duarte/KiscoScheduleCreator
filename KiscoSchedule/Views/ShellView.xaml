@@ -29,23 +29,35 @@
                     IsEnabled="{Binding CanHamburgerMenu}"
                     HorizontalAlignment="Right" 
                     Margin="16"/>
-                
+
                 <Button 
-                    Content="Schedule" 
                     cal:Message.Attach="ScheduleControl"
                     Margin="5" 
-                    Style="{StaticResource MaterialDesignFlatButton}" />
+                    Style="{StaticResource MaterialDesignFlatButton}" >
+                    <StackPanel Orientation="Horizontal" >
+                        <materialDesign:PackIcon Kind="CalendarText" />
+                        <TextBlock Text="Schedule" Margin="2 0"/>
+                    </StackPanel>
+                </Button>
 
                 <Button 
-                    Content="Employees" 
                     cal:Message.Attach="EmployeesControl" 
                     Margin="5" 
-                    Style="{StaticResource MaterialDesignFlatButton}" />
+                    Style="{StaticResource MaterialDesignFlatButton}" >
+                    <StackPanel Orientation="Horizontal" >
+                        <materialDesign:PackIcon Kind="UserGroup" />
+                        <TextBlock Text="Employees" Margin="2 0"/>
+                    </StackPanel>
+                </Button>
 
                 <Button 
-                    Content="Settings" 
                     Margin="5" 
-                    Style="{StaticResource MaterialDesignFlatButton}" />
+                    Style="{StaticResource MaterialDesignFlatButton}" >
+                    <StackPanel Orientation="Horizontal" >
+                        <materialDesign:PackIcon Kind="Gear" />
+                        <TextBlock Text="Settings" Margin="2 0"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </materialDesign:DrawerHost.LeftDrawerContent>
 
