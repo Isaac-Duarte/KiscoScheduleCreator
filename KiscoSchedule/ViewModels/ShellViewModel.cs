@@ -43,10 +43,6 @@ namespace KiscoSchedule.ViewModels
             ActivateItem(_container.GetInstance<LoginViewModel>());
 
             ProgressVisibility = Visibility.Hidden;
-
-            SmsService smsService = new SmsService("AC32642b2a4b16e9355e0a3371d5314d4a", "30ae7eb40df510b3ebefa0b4e15df89d", "+14352443156");
-
-            smsService.SendMessage("+18015569811", "Guys only");
         }
 
         /// <summary>
