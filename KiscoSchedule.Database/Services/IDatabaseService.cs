@@ -62,6 +62,15 @@ namespace KiscoSchedule.Database.Services
         Task<IEmployee> GetEmployeeAsync(int id);
 
         /// <summary>
+        /// Grabs a list of employees from the database
+        /// </summary>
+        /// <param name="userId">The parent id of the employee</param>
+        /// <param name="limit">The limit (page)</param>
+        /// <param name="offset">Offset</param>
+        /// <returns>List of employees</returns>
+        Task<List<IEmployee>> GetEmployeesAsync(IUser user);
+
+        /// <summary>
         /// Adds an employee to the database
         /// </summary>
         /// <param name="user"></param>

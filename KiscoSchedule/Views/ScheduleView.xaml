@@ -6,6 +6,7 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:KiscoSchedule.Views"
+             xmlns:vm="clr-namespace:KiscoSchedule.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -15,12 +16,18 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <DataGrid>
+    <StackPanel>
+        <TextBlock Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" HorizontalAlignment="Center" />
+        <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{Binding Month}" />
-                
+                <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
+                <DataGridComboBoxColumn Header="Sunday" />
+                <DataGridComboBoxColumn Header="Monday" />
+                <DataGridComboBoxColumn Header="Tuesday" />
+                <DataGridComboBoxColumn Header="Wednesday" />
+                <DataGridComboBoxColumn Header="Thursday" />
+                <DataGridComboBoxColumn Header="Friday" />
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </StackPanel>
 </UserControl>

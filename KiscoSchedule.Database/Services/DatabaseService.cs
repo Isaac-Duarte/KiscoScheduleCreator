@@ -166,6 +166,36 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
+        /// Grabs a list of employees from the database
+        /// </summary>
+        /// <param name="userId">The parent id of the employee</param>
+        /// <param name="limit">The limit (page)</param>
+        /// <param name="offset">Offset</param>
+        /// <returns>List of employees</returns>
+        public async Task<List<IEmployee>> GetEmployeesAsync(IUser user)
+        {
+            List<IEmployee> employees = new List<IEmployee>();
+
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Employees Where UserId=@UserId", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+
+            while (dataReader.Read())
+            {
+                employees.Add(new Employee
+                {
+                    Id = dataReader.GetInt32(0),
+                    UserId = dataReader.GetInt32(1),
+                    Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]),
+                    PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"])
+                });
+            }
+
+            return employees;
+        }
+
+        /// <summary>
         /// Grabs an employee from the database
         /// </summary>
         /// <param name="id">The Id of the employee</param>
