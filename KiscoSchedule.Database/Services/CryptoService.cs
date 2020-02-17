@@ -8,7 +8,7 @@ using System.IO;
 
 namespace KiscoSchedule.Database.Services
 {
-    public class CryptoService
+    public class CryptoService : ICryptoService
     {
         private RC2CryptoServiceProvider rc2;
         /// <summary>
