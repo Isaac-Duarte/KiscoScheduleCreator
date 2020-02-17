@@ -8,9 +8,9 @@ using System.IO;
 
 namespace KiscoSchedule.Database.Services
 {
-    public class CryptoService
+    public class CryptoService : ICryptoService
     {
-        RC2CryptoServiceProvider rc2;
+        private RC2CryptoServiceProvider rc2;
         /// <summary>
         /// Highly reccommended that this is changed!
         /// You can use the SaltGenerator in this solution!
