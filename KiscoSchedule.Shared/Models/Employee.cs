@@ -10,8 +10,6 @@ namespace KiscoSchedule.Shared.Models
 {
     public class Employee : IEmployee
     {
-        private string name { get; set; }
-
         /// <summary>
         /// SQLite Id of the Employee
         /// </summary>
@@ -25,17 +23,7 @@ namespace KiscoSchedule.Shared.Models
         /// <summary>
         /// The name of the employee
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// The phone number of the employee

@@ -15,13 +15,6 @@ namespace KiscoSchedule.Database.Services
         void GenerateCryptoProvider(string password);
 
         /// <summary>
-        /// This will hash a string
-        /// </summary>
-        /// <param name="input">string wanting to be hashed</param>
-        /// <returns>hash</returns>
-        string Hash(string input);
-
-        /// <summary>
         /// Encrypts bytes using RC2
         /// </summary>
         /// <param name="rawBytes">The bytes wanting to be encrypted</param>

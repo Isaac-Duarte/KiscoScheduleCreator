@@ -10,7 +10,8 @@ namespace KiscoSchedule.Database.Services
 {
     public class CryptoService : ICryptoService
     {
-        private RC2CryptoServiceProvider rc2;
+        private AesCryptoServiceProvider aes;
+
         /// <summary>
         /// Highly reccommended that this is changed!
         /// You can use the SaltGenerator in this solution!
@@ -32,7 +33,7 @@ namespace KiscoSchedule.Database.Services
         public CryptoService()
         {
             // Initalize variables
-            rc2 = new RC2CryptoServiceProvider();
+            aes = new AesCryptoServiceProvider();
         }
 
         /// <summary>
@@ -45,14 +46,14 @@ namespace KiscoSchedule.Database.Services
             Rfc2898DeriveBytes passwordGenerator = new Rfc2898DeriveBytes(password, salt, 10000);
 
             // Get the key & IV
-            byte[] key = passwordGenerator.GetBytes(16);
-            byte[] iv = passwordGenerator.GetBytes(8);
+            byte[] key = passwordGenerator.GetBytes(aes.KeySize / 8);
+            byte[] iv = passwordGenerator.GetBytes(aes.BlockSize/ 8);
 
             // Modify current RC2 variable
-            rc2 = new RC2CryptoServiceProvider();
+            aes = new AesCryptoServiceProvider();
 
-            rc2.Key = key;
-            rc2.IV = iv;
+            aes.Key = key;
+            aes.IV = iv;
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace KiscoSchedule.Database.Services
             byte[] encryptedBytes;
 
             using (MemoryStream memoryStream = new MemoryStream())
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, rc2.CreateEncryptor(), CryptoStreamMode.Write))
+            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
             {
                 cryptoStream.Write(rawBytes, 0, rawBytes.Length);
                 cryptoStream.Close();
@@ -106,7 +107,7 @@ namespace KiscoSchedule.Database.Services
             byte[] rawBytes;
 
             using (MemoryStream memoryStream = new MemoryStream())
-            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, rc2.CreateDecryptor(), CryptoStreamMode.Write))
+            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Write))
             {
                 cryptoStream.Write(encryptedBytes, 0, encryptedBytes.Length);
                 cryptoStream.Close();
