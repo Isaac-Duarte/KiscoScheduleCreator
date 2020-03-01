@@ -63,6 +63,17 @@ namespace KiscoSchedule.Database.Services
 
             command = new SQLiteCommand(queryString, sqliteConnection);
             await command.ExecuteNonQueryAsync();
+
+            // Create Settings table
+            queryString = @"CREATE TABLE IF NOT EXISTS 'Settings' (
+	            'Id'	INTEGER PRIMARY KEY AUTOINCREMENT,
+                'UserId'    INTEGER,
+	            'Key'	BLOB,
+                'Value' BLOB
+            );";
+
+            command = new SQLiteCommand(queryString, sqliteConnection);
+            await command.ExecuteNonQueryAsync();
         }
 
         /// <summary>
@@ -265,6 +276,66 @@ namespace KiscoSchedule.Database.Services
             command.Parameters.AddWithValue("Id", employee.Id);
 
             await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Creates a Setting given the setting and employee
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        public async Task CreateSetting(IUser user, ISetting setting)
+        {
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO Settings (UserId, Key, Value) VALUES(@UserId, @Key, @Value)", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+            command.Parameters.AddWithValue("Key", cryptoService.EncryptString(setting.Key));
+            command.Parameters.AddWithValue("Value", cryptoService.EncryptString(setting.Value));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Updates a setting given the setting object
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        public async Task UpdateSetting(ISetting setting)
+        {
+            SQLiteCommand command = new SQLiteCommand("Update Settings Set Key = @Key, Value = @Value WHERE Id = @Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", setting.Id);
+            command.Parameters.AddWithValue("Key", cryptoService.EncryptString(setting.Key));
+            command.Parameters.AddWithValue("Value", cryptoService.EncryptString(setting.Value));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Returns a list of the settings
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        public async Task<List<ISetting>> GetSettingsAsync(IUser user)
+        {
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Settings Where UserId=@UserId", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+
+            List<ISetting> settings = new List<ISetting>();
+            
+            while (dataReader.Read())
+            {
+                settings.Add(new Setting
+                {
+                    Id = dataReader.GetInt32(0),
+                    UserId = dataReader.GetInt32(1),
+                    Key = cryptoService.DecryptBytesToString((byte[])dataReader["Key"]),
+                    Value = cryptoService.DecryptBytesToString((byte[])dataReader["Value"])
+                });
+            }
+
+            return settings;
         }
     }
 }

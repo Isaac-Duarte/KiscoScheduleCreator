@@ -195,5 +195,11 @@ namespace KiscoSchedule.ViewModels
             ActivateItem(_container.GetInstance<ScheduleViewModel>());
             LeftDrawerOpen = false;
         }
+
+        public void SettingsControl()
+        {
+            ActivateItem(_container.GetInstance<SettingsViewModel>());
+            LeftDrawerOpen = false;
+        }
     }
 }

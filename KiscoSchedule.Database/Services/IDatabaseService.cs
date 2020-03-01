@@ -91,5 +91,28 @@ namespace KiscoSchedule.Database.Services
         /// <param name="employee"></param>
         /// <returns></returns>
         Task DeleteEmployeeAsync(IEmployee employee);
+
+        /// <summary>
+        /// Creates a Setting given the setting and employee
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        Task CreateSetting(IUser user, ISetting setting);
+
+        /// <summary>
+        /// Updates a setting given the setting object
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        Task UpdateSetting(ISetting setting);
+
+        /// <summary>
+        /// Returns a list of the settings
+        /// </summary>
+        /// <param name="employee"></param>
+        /// <returns></returns>
+        Task<List<ISetting>> GetSettingsAsync(IUser user);
     }
 }
