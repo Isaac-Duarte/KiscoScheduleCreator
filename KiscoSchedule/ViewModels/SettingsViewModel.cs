@@ -15,7 +15,8 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private IUser _user;
         private List<ISetting> settings;
-        private string twilioApiKey;
+        private string twilioAccountSID;
+        private string twilioAuthToken;
 
         public SettingsViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -30,18 +31,32 @@ namespace KiscoSchedule.ViewModels
         {
             settings = await _databaseService.GetSettingsAsync(_user);
             
-            if (!settings.Any(setting => setting.Key == "ApiKey"))
+            if (!settings.Any(setting => setting.Key == "ACCOUNT_SID"))
             {
                 ISetting apiSetting = new Setting
                 {
-                    Key = "ApiKey",
+                    Key = "ACCOUNT_SID",
                     Value = ""
                 };
 
                 await _databaseService.CreateSetting(_user, apiSetting);
+                settings.Add(apiSetting);
             }
 
-            TwilioApiKey = settings.Where(a => a.Key == "ApiKey").First().Value;
+            if (!settings.Any(setting => setting.Key == "AUTH_TOKEN"))
+            {
+                ISetting apiSetting = new Setting
+                {
+                    Key = "AUTH_TOKEN",
+                    Value = ""
+                };
+
+                await _databaseService.CreateSetting(_user, apiSetting);
+                settings.Add(apiSetting);
+            }
+
+            TwilioAccountSID = settings.Where(a => a.Key == "ACCOUNT_SID").First().Value;
+            TwilioAuthToken = settings.Where(a => a.Key == "AUTH_TOKEN").First().Value;
         }
 
         private async void updateSetting(string key, string value)
@@ -57,17 +72,31 @@ namespace KiscoSchedule.ViewModels
             await _databaseService.UpdateSetting(setting);
         }
 
-        public string TwilioApiKey
+        public string TwilioAccountSID
         {
             get
             {
-                return twilioApiKey;
+                return twilioAccountSID;
             }
             set
             {
-                twilioApiKey = value;
-                NotifyOfPropertyChange(() => TwilioApiKey);
-                updateSetting("ApiKey", value);
+                twilioAccountSID = value;
+                NotifyOfPropertyChange(() => TwilioAccountSID);
+                updateSetting("ACCOUNT_SID", value);
+            }
+        }
+        
+        public string TwilioAuthToken
+        {
+            get
+            {
+                return twilioAuthToken;
+            }
+            set
+            {
+                twilioAuthToken = value;
+                NotifyOfPropertyChange(() => TwilioAuthToken);
+                updateSetting("AUTH_TOKEN", value);
             }
         }
     }
