@@ -32,12 +32,16 @@ namespace KiscoSchedule.ViewModels
             
             if (!settings.Any(setting => setting.Key == "ApiKey"))
             {
-                await _databaseService.CreateSetting(_user, new Setting
+                ISetting apiSetting = new Setting
                 {
                     Key = "ApiKey",
                     Value = ""
-                });
+                };
+
+                await _databaseService.CreateSetting(_user, apiSetting);
             }
+
+            TwilioApiKey = settings.Where(a => a.Key == "ApiKey").First().Value;
         }
 
         private async void updateSetting(string key, string value)
