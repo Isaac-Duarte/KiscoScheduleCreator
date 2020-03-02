@@ -369,13 +369,14 @@ namespace KiscoSchedule.Database.Services
         /// <param name="user"></param>
         /// <param name="shift"></param>
         /// <returns></returns>
-        public async Task CreateShiftAsync(IUser user, IShift shift)
+        public async Task<long> CreateShiftAsync(IUser user, IShift shift)
         {
             SQLiteCommand command = new SQLiteCommand("INSERT INTO Shifts (UserId, Name) VALUES(@UserId, @Name)", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
             command.Parameters.AddWithValue("Name", cryptoService.EncryptString(shift.Name));
 
             await command.ExecuteNonQueryAsync();
+            return sqliteConnection.LastInsertRowId;
         }
 
         /// <summary>
@@ -418,6 +419,19 @@ namespace KiscoSchedule.Database.Services
             }
 
             return shifts;
+        }
+
+        /// <summary>
+        /// Removes a shift given the shift object
+        /// </summary>
+        /// <param name="setting"></param>
+        /// <returns></returns>
+        public async Task RemoveShiftsAsync(IShift shift)
+        {
+            SQLiteCommand command = new SQLiteCommand("DELETE FROM Shifts Where Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", shift.Id);
+
+            await command.ExecuteNonQueryAsync();
         }
     }
 }

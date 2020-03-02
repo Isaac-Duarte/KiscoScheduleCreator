@@ -11,7 +11,7 @@ namespace KiscoSchedule.Shared.Models
         /// <summary>
         /// SQLite Id of the shift
         /// </summary>
-        int Id { get; set; }
+        long Id { get; set; }
 
         /// <summary>
         /// The Id of the parent

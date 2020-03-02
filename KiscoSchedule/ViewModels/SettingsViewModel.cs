@@ -62,7 +62,7 @@ namespace KiscoSchedule.ViewModels
 
             ISetting setting = settings[key];
             setting.Value = value;
-            await _databaseService.UpdateSetting(setting);
+            await _databaseService.UpdateSettingAsync(setting);
         }
 
         public string TwilioAccountSID

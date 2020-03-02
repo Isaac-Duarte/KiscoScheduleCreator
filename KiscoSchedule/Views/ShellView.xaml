@@ -51,6 +51,7 @@
                 </Button>
 
                 <Button 
+                    cal:Message.Attach="ShiftsControl"
                     Margin="5" 
                     Style="{StaticResource MaterialDesignFlatButton}" >
                     <StackPanel Orientation="Horizontal" >
