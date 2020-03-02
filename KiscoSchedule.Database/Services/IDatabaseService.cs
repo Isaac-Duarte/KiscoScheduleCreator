@@ -98,7 +98,7 @@ namespace KiscoSchedule.Database.Services
         /// <param name="employee"></param>
         /// <param name="setting"></param>
         /// <returns></returns>
-        Task CreateSetting(IUser user, ISetting setting);
+        Task CreateSettingAsync(IUser user, ISetting setting);
 
         /// <summary>
         /// Updates a setting given the setting object
@@ -106,7 +106,7 @@ namespace KiscoSchedule.Database.Services
         /// <param name="employee"></param>
         /// <param name="setting"></param>
         /// <returns></returns>
-        Task UpdateSetting(ISetting setting);
+        Task UpdateSettingAsync(ISetting setting);
 
         /// <summary>
         /// Returns a list of the settings
