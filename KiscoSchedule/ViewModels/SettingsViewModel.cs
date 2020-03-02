@@ -14,7 +14,7 @@ namespace KiscoSchedule.ViewModels
         private IDatabaseService _databaseService;
         private IEventAggregator _events;
         private IUser _user;
-        private List<ISetting> settings;
+        private Dictionary<string, ISetting> settings;
         private string twilioAccountSID;
         private string twilioAuthToken;
 
@@ -30,44 +30,37 @@ namespace KiscoSchedule.ViewModels
         private async void LoadSettings()
         {
             settings = await _databaseService.GetSettingsAsync(_user);
-            
-            if (!settings.Any(setting => setting.Key == "ACCOUNT_SID"))
+
+            if (!settings.ContainsKey("ACCOUNT_SID"))
             {
-                ISetting apiSetting = new Setting
+                settings["ACCOUNT_SID"] = new Setting
                 {
                     Key = "ACCOUNT_SID",
                     Value = ""
                 };
-
-                await _databaseService.CreateSetting(_user, apiSetting);
-                settings.Add(apiSetting);
             }
 
-            if (!settings.Any(setting => setting.Key == "AUTH_TOKEN"))
+            if (!settings.ContainsKey("AUTH_TOKEN"))
             {
-                ISetting apiSetting = new Setting
+                settings["AUTH_TOKEN"] = new Setting
                 {
                     Key = "AUTH_TOKEN",
                     Value = ""
                 };
-
-                await _databaseService.CreateSetting(_user, apiSetting);
-                settings.Add(apiSetting);
             }
 
-            TwilioAccountSID = settings.Where(a => a.Key == "ACCOUNT_SID").First().Value;
-            TwilioAuthToken = settings.Where(a => a.Key == "AUTH_TOKEN").First().Value;
+            TwilioAccountSID = settings["ACCOUNT_SID"].Value;
+            TwilioAuthToken = settings["AUTH_TOKEN"].Value;
         }
 
         private async void updateSetting(string key, string value)
         {
-            if (!settings.Any(a => a.Key == key))
+            if (settings.ContainsKey(key))
             {
                 return;
             }
 
-            ISetting setting = settings.Where(a => a.Key == key).First();
-
+            ISetting setting = settings[key];
             setting.Value = value;
             await _databaseService.UpdateSetting(setting);
         }
@@ -85,7 +78,7 @@ namespace KiscoSchedule.ViewModels
                 updateSetting("ACCOUNT_SID", value);
             }
         }
-        
+
         public string TwilioAuthToken
         {
             get

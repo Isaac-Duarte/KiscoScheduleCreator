@@ -315,24 +315,26 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        public async Task<List<ISetting>> GetSettingsAsync(IUser user)
+        public async Task<Dictionary<string, ISetting>> GetSettingsAsync(IUser user)
         {
             SQLiteCommand command = new SQLiteCommand("SELECT * FROM Settings Where UserId=@UserId", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
 
             DbDataReader dataReader = await command.ExecuteReaderAsync();
 
-            List<ISetting> settings = new List<ISetting>();
+            Dictionary<string, ISetting> settings = new Dictionary<string, ISetting>();
             
             while (dataReader.Read())
             {
-                settings.Add(new Setting
+                ISetting setting = new Setting
                 {
                     Id = dataReader.GetInt32(0),
                     UserId = dataReader.GetInt32(1),
                     Key = cryptoService.DecryptBytesToString((byte[])dataReader["Key"]),
                     Value = cryptoService.DecryptBytesToString((byte[])dataReader["Value"])
-                });
+                };
+
+                settings.Add(setting.Key, setting);
             }
 
             return settings;

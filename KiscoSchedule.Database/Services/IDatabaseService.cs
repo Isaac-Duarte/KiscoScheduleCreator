@@ -113,6 +113,6 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        Task<List<ISetting>> GetSettingsAsync(IUser user);
+        Task<Dictionary<string, ISetting>> GetSettingsAsync(IUser user);
     }
 }

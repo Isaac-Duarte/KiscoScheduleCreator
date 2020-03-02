@@ -1,15 +1,9 @@
 ﻿using Caliburn.Micro;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.Shared.Util;
 using KiscoSchedule.Shared.Models;
 using MaterialDesignThemes.Wpf;
 using KiscoSchedule.EventModels;
-using KiscoSchedule.Shared.Util;
 using System.Windows;
 
 namespace KiscoSchedule.ViewModels
