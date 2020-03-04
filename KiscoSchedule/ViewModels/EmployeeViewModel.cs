@@ -3,6 +3,7 @@ using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
 using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
+using KiscoSchedule.Shared.Util;
 using KiscoSchedule.Views;
 using MaterialDesignThemes.Wpf;
 using System;
@@ -132,6 +133,20 @@ namespace KiscoSchedule.ViewModels
             Employees.Add(employee);
 
             SelectedEmployee = employee;
+        }
+
+        public async void SmsTest()
+        {
+            var settings = await _databaseService.GetSettingsAsync(_user);
+
+            SmsService smsService = new SmsService(settings["ACCOUNT_SID"].Value, settings["AUTH_TOKEN"].Value, settings["PHONE_NUMBER"].Value);
+
+            foreach (Employee employee in Employees)
+            {
+                smsService.SendMessage(employee.PhoneNumber, $"Hi {employee.Name}! This was an automated text message from your boss!");
+            }
+
+            _events.PublishOnUIThread(new SnackBarEventModel($"Sent {Employees.Count} text messages!"));
         }
 
         /// <summary>

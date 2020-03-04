@@ -21,7 +21,7 @@
         <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
-                <DataGridComboBoxColumn Header="Sunday" ItemsSource="{Binding Shifts}" DisplayMemberPath="{Binding Key}"/>
+                <DataGridComboBoxColumn Header="Sunday" ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Shifts}" SelectedValuePath="Id" DisplayMemberPath="Name" />
                 <DataGridComboBoxColumn Header="Monday" ItemsSource="{Binding Shifts}" />
                 <DataGridComboBoxColumn Header="Tuesday" ItemsSource="{Binding Shifts}" />
                 <DataGridComboBoxColumn Header="Wednesday" ItemsSource="{Binding Shifts}" />

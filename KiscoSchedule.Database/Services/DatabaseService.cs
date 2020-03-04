@@ -305,7 +305,7 @@ namespace KiscoSchedule.Database.Services
         /// <param name="employee"></param>
         /// <param name="setting"></param>
         /// <returns></returns>
-        public async Task CreateSettingAsync(IUser user, ISetting setting)
+        public async Task<long> CreateSettingAsync(IUser user, ISetting setting)
         {
             SQLiteCommand command = new SQLiteCommand("INSERT INTO Settings (UserId, Key, Value) VALUES(@UserId, @Key, @Value)", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
@@ -313,6 +313,7 @@ namespace KiscoSchedule.Database.Services
             command.Parameters.AddWithValue("Value", cryptoService.EncryptString(setting.Value));
 
             await command.ExecuteNonQueryAsync();
+            return sqliteConnection.LastInsertRowId;
         }
 
         /// <summary>

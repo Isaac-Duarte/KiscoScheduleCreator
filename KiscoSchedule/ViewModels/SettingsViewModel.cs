@@ -17,6 +17,7 @@ namespace KiscoSchedule.ViewModels
         private Dictionary<string, ISetting> settings;
         private string twilioAccountSID;
         private string twilioAuthToken;
+        private string twilioPhoneNumber;
 
         public SettingsViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -31,31 +32,34 @@ namespace KiscoSchedule.ViewModels
         {
             settings = await _databaseService.GetSettingsAsync(_user);
 
-            if (!settings.ContainsKey("ACCOUNT_SID"))
+            await validateSetting("ACCOUNT_SID");
+            await validateSetting("AUTH_TOKEN");
+            await validateSetting("PHONE_NUMBER");
+
+            twilioAccountSID = settings["ACCOUNT_SID"].Value;
+            twilioAuthToken = settings["AUTH_TOKEN"].Value;
+            twilioPhoneNumber = settings["PHONE_NUMBER"].Value;
+        }
+
+        private async Task validateSetting(string key)
+        {
+            if (!settings.ContainsKey(key))
             {
-                settings["ACCOUNT_SID"] = new Setting
+                Setting setting = new Setting
                 {
-                    Key = "ACCOUNT_SID",
+                    Key = key,
                     Value = ""
                 };
-            }
 
-            if (!settings.ContainsKey("AUTH_TOKEN"))
-            {
-                settings["AUTH_TOKEN"] = new Setting
-                {
-                    Key = "AUTH_TOKEN",
-                    Value = ""
-                };
+                long id = await _databaseService.CreateSettingAsync(_user, setting);
+                setting.Id = (int) id;
+                settings[key] = setting;
             }
-
-            TwilioAccountSID = settings["ACCOUNT_SID"].Value;
-            TwilioAuthToken = settings["AUTH_TOKEN"].Value;
         }
 
         private async void updateSetting(string key, string value)
         {
-            if (settings.ContainsKey(key))
+            if (!settings.ContainsKey(key))
             {
                 return;
             }
@@ -90,6 +94,20 @@ namespace KiscoSchedule.ViewModels
                 twilioAuthToken = value;
                 NotifyOfPropertyChange(() => TwilioAuthToken);
                 updateSetting("AUTH_TOKEN", value);
+            }
+        }
+
+        public string TwilioPhoneNumber
+        {
+            get
+            {
+                return twilioPhoneNumber;
+            }
+            set
+            {
+                twilioPhoneNumber = value;
+                NotifyOfPropertyChange(() => TwilioPhoneNumber);
+                updateSetting("PHONE_NUMBER", value);
             }
         }
     }

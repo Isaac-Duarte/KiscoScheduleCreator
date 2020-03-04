@@ -37,5 +37,17 @@
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
             Text="{Binding Path=TwilioAuthToken, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
+
+        <StackPanel Margin="0 0">
+            <TextBlock 
+            Text="Twilio Phone Numebr" 
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}" 
+            Margin="0 0"/>
+
+            <TextBox 
+            materialDesign:HintAssist.Hint="Phone Number"
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+            Text="{Binding Path=TwilioPhoneNumber, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
     </StackPanel>
 </UserControl>

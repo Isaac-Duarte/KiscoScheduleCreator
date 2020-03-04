@@ -1,9 +1,11 @@
 ﻿using Caliburn.Micro;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
+using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -18,6 +20,7 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private IUser _user;
         private List<IEmployee> employees;
+        private AsyncObservableCollection<IShift> shifts;
 
         /// <summary>
         /// Constuctor for ScheduleViewModel
@@ -35,7 +38,8 @@ namespace KiscoSchedule.ViewModels
         private async void LoadSchedule()
         {
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
-            employees = await _databaseService.GetEmployeesAsync(_user);
+            Employees = await _databaseService.GetEmployeesAsync(_user);
+            Shifts = new AsyncObservableCollection<IShift>(await _databaseService.GetShiftsAsync(_user));
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
         }
 
@@ -46,6 +50,16 @@ namespace KiscoSchedule.ViewModels
             {
                 employees = value;
                 NotifyOfPropertyChange(() => Employees);
+            }
+        }
+
+        public AsyncObservableCollection<IShift> Shifts
+        {
+            get { return shifts; }
+            set
+            {
+                shifts = value;
+                NotifyOfPropertyChange(() => Shifts);
             }
         }
 

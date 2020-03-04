@@ -72,6 +72,17 @@
                     Height="24"
                     Width="24" />
             </Button>
+
+            <Button x:Name="SmsTest"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="60 10">
+                <materialDesign:PackIcon
+                    Kind="Sms"
+                    Height="24"
+                    Width="24" />
+            </Button>
         </Grid>
     </materialDesign:DialogHost>
 </UserControl>
