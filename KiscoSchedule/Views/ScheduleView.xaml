@@ -21,12 +21,12 @@
         <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
-                <DataGridComboBoxColumn Header="Sunday" />
-                <DataGridComboBoxColumn Header="Monday" />
-                <DataGridComboBoxColumn Header="Tuesday" />
-                <DataGridComboBoxColumn Header="Wednesday" />
-                <DataGridComboBoxColumn Header="Thursday" />
-                <DataGridComboBoxColumn Header="Friday" />
+                <DataGridComboBoxColumn Header="Sunday" ItemsSource="{Binding Shifts}" DisplayMemberPath="{Binding Key}"/>
+                <DataGridComboBoxColumn Header="Monday" ItemsSource="{Binding Shifts}" />
+                <DataGridComboBoxColumn Header="Tuesday" ItemsSource="{Binding Shifts}" />
+                <DataGridComboBoxColumn Header="Wednesday" ItemsSource="{Binding Shifts}" />
+                <DataGridComboBoxColumn Header="Thursday" ItemsSource="{Binding Shifts}" />
+                <DataGridComboBoxColumn Header="Friday" ItemsSource="{Binding Shifts}" />
             </DataGrid.Columns>
         </DataGrid>
     </StackPanel>

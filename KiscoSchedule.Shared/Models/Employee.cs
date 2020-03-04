@@ -29,5 +29,10 @@ namespace KiscoSchedule.Shared.Models
         /// The phone number of the employee
         /// </summary>
         public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// The shfits of the employee
+        /// </summary>
+        public Dictionary<DayOfWeek, IShift> Shifts { get; set; }
     }
 }
