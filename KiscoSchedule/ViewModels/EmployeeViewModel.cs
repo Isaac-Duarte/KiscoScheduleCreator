@@ -88,14 +88,6 @@ namespace KiscoSchedule.ViewModels
             get { return true; }
         }
 
-        public List<string> ListDays
-        {
-            get
-            {
-                return Enum.GetNames(typeof(DayOfWeek)).ToList<string>();
-            }
-        }
-
         /// <summary>
         /// Called when the datagrid is scolled
         /// </summary>
@@ -133,20 +125,6 @@ namespace KiscoSchedule.ViewModels
             Employees.Add(employee);
 
             SelectedEmployee = employee;
-        }
-
-        public async void SmsTest()
-        {
-            var settings = await _databaseService.GetSettingsAsync(_user);
-
-            SmsService smsService = new SmsService(settings["ACCOUNT_SID"].Value, settings["AUTH_TOKEN"].Value, settings["PHONE_NUMBER"].Value);
-
-            foreach (Employee employee in Employees)
-            {
-                smsService.SendMessage(employee.PhoneNumber, $"Hi {employee.Name}! This was an automated text message from your boss!");
-            }
-
-            _events.PublishOnUIThread(new SnackBarEventModel($"Sent {Employees.Count} text messages!"));
         }
 
         /// <summary>

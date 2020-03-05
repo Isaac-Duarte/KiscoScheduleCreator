@@ -51,11 +51,14 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// Callback for the add button
+        /// </summary>
         public async void Add()
         {
             Shift shift = new Shift
             {
-                Name = "nil"
+                Name = "New Shift"
             };
 
             long id = await _databaseService.CreateShiftAsync(_user, shift);
@@ -66,6 +69,9 @@ namespace KiscoSchedule.ViewModels
             SelectedShift = shift;
         }
         
+        /// <summary>
+        /// Removes the selected shift
+        /// </summary>
         public async void Remove()
         {
             if (SelectedShift == null)
@@ -75,6 +81,9 @@ namespace KiscoSchedule.ViewModels
             Shifts.Remove(SelectedShift);
         }
 
+        /// <summary>
+        /// The current selected shift
+        /// </summary>
         public Shift SelectedShift
         {
             get { return selectedShift; }

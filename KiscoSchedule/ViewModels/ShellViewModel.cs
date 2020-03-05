@@ -184,18 +184,27 @@ namespace KiscoSchedule.ViewModels
             LeftDrawerOpen = false;
         }
 
+        /// <summary>
+        /// Shcedule page
+        /// </summary>
         public void ScheduleControl()
         {
             ActivateItem(_container.GetInstance<ScheduleViewModel>());
             LeftDrawerOpen = false;
         }
 
+        /// <summary>
+        /// Settings page
+        /// </summary>
         public void SettingsControl()
         {
             ActivateItem(_container.GetInstance<SettingsViewModel>());
             LeftDrawerOpen = false;
         }
 
+        /// <summary>
+        /// Shifts page
+        /// </summary>
         public void ShiftsControl()
         {
             ActivateItem(_container.GetInstance<ShiftsViewModel>());

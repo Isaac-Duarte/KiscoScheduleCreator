@@ -19,7 +19,7 @@ namespace KiscoSchedule.ViewModels
         private IDatabaseService _databaseService;
         private IEventAggregator _events;
         private IUser _user;
-        private List<IEmployee> employees;
+        private AsyncObservableCollection<IEmployee> employees;
         private AsyncObservableCollection<IShift> shifts;
 
         /// <summary>
@@ -35,15 +35,21 @@ namespace KiscoSchedule.ViewModels
             LoadSchedule();
         }
 
+        /// <summary>
+        /// Loads the schedule async
+        /// </summary>
         private async void LoadSchedule()
         {
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
-            Employees = await _databaseService.GetEmployeesAsync(_user);
+            Employees = new AsyncObservableCollection<IEmployee>(await _databaseService.GetEmployeesAsync(_user));
             Shifts = new AsyncObservableCollection<IShift>(await _databaseService.GetShiftsAsync(_user));
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
         }
 
-        public List<IEmployee> Employees
+        /// <summary>
+        /// List of Employees
+        /// </summary>
+        public AsyncObservableCollection<IEmployee> Employees
         {
             get { return employees; }
             set
@@ -53,6 +59,9 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// A collection of the user's sihfts
+        /// </summary>
         public AsyncObservableCollection<IShift> Shifts
         {
             get { return shifts; }
@@ -63,6 +72,9 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// The current month
+        /// </summary>
         public string Month
         {
             get

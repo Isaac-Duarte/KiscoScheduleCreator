@@ -25,10 +25,13 @@ namespace KiscoSchedule.ViewModels
             _events = events;
             _user = user;
 
-            LoadSettings();
+            loadSettings();
         }
 
-        private async void LoadSettings()
+        /// <summary>
+        /// Loads the settings from the database
+        /// </summary>
+        private async void loadSettings()
         {
             settings = await _databaseService.GetSettingsAsync(_user);
 
@@ -41,6 +44,11 @@ namespace KiscoSchedule.ViewModels
             twilioPhoneNumber = settings["PHONE_NUMBER"].Value;
         }
 
+        /// <summary>
+        /// Validates a setting
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         private async Task validateSetting(string key)
         {
             if (!settings.ContainsKey(key))
@@ -57,6 +65,11 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// Upadtes a setting
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         private async void updateSetting(string key, string value)
         {
             if (!settings.ContainsKey(key))
@@ -69,6 +82,9 @@ namespace KiscoSchedule.ViewModels
             await _databaseService.UpdateSettingAsync(setting);
         }
 
+        /// <summary>
+        /// Account SID Setting
+        /// </summary>
         public string TwilioAccountSID
         {
             get
@@ -83,6 +99,9 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// Auth Token setting
+        /// </summary>
         public string TwilioAuthToken
         {
             get
@@ -97,6 +116,9 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// Phone number setting
+        /// </summary>
         public string TwilioPhoneNumber
         {
             get
