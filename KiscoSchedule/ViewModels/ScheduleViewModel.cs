@@ -121,7 +121,7 @@ namespace KiscoSchedule.ViewModels
         /// The current month
         /// </summary>
         public string Month
-        {
+        {   
             get
             {
                 return DateTime.Now.ToString("MMMM", CultureInfo.InvariantCulture);

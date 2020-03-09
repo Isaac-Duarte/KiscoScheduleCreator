@@ -40,23 +40,76 @@
             
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
-                <DataGridTemplateColumn>
+
+                <!-- Sunday -->
+                <DataGridTemplateColumn Header="Sunday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}">
-                                <ComboBoxItem>
-                                    <TextBlock Text="{Binding Name}" />
-                                </ComboBoxItem>
-                            </ComboBox>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridComboBoxColumn Header="Sunday" ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Shifts}" SelectedValuePath="Id" DisplayMemberPath="Name" />
-                <DataGridComboBoxColumn Header="Monday" ItemsSource="{Binding Shifts}" />
-                <DataGridComboBoxColumn Header="Tuesday" ItemsSource="{Binding Shifts}" />
-                <DataGridComboBoxColumn Header="Wednesday" ItemsSource="{Binding Shifts}" />
-                <DataGridComboBoxColumn Header="Thursday" ItemsSource="{Binding Shifts}" />
-                <DataGridComboBoxColumn Header="Friday" ItemsSource="{Binding Shifts}" />
+                <!-- Sunday -->
+                
+                <!-- Monday -->
+                <DataGridTemplateColumn Header="Monday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/> 
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Monday -->
+
+                <!-- Tuesday -->
+                <DataGridTemplateColumn Header="Tuesday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Tuesday -->
+
+                <!-- Wednesday -->
+                <DataGridTemplateColumn Header="Wednesday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Wednesday -->
+
+                <!-- Thursday -->
+                <DataGridTemplateColumn Header="Thursday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Thursday -->
+
+                <!-- Friday -->
+                <DataGridTemplateColumn Header="Friday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Friday -->
+
+                <!-- Saturday -->
+                <DataGridTemplateColumn Header="Friday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Saturday -->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

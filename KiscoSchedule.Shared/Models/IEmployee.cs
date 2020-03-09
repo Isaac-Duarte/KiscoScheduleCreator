@@ -30,5 +30,7 @@ namespace KiscoSchedule.Shared.Models
         /// The shfits of the employee
         /// </summary>
         ObservableCollection<IShift> Shifts { get; set; }
+
+        Dictionary<DayOfWeek, IShift> ShiftsWeek { get; set; }
     }
 }
