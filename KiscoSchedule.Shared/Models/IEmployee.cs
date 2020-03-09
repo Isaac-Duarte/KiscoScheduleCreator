@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace KiscoSchedule.Shared.Models
 {
@@ -28,6 +29,6 @@ namespace KiscoSchedule.Shared.Models
         /// <summary>
         /// The shfits of the employee
         /// </summary>
-        Dictionary<DayOfWeek, IShift> Shifts { get; set; }
+        ObservableCollection<IShift> Shifts { get; set; }
     }
 }

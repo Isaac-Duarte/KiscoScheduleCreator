@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -30,9 +31,6 @@ namespace KiscoSchedule.Shared.Models
         /// </summary>
         public string PhoneNumber { get; set; }
 
-        /// <summary>
-        /// The shfits of the employee
-        /// </summary>
-        public Dictionary<DayOfWeek, IShift> Shifts { get; set; }
+        public ObservableCollection<IShift> Shifts { get; set; }
     }
 }

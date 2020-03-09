@@ -6,6 +6,8 @@
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:KiscoSchedule.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:services="clr-namespace:KiscoSchedule.Services"
              xmlns:vm="clr-namespace:KiscoSchedule.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -16,11 +18,39 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
-    <StackPanel>
-        <TextBlock Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" HorizontalAlignment="Center" />
-        <DataGrid ItemsSource="{Binding Employees}" AutoGenerateColumns="False">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" HorizontalAlignment="Center" Grid.Row="0" />
+        <DataGrid 
+            ItemsSource="{Binding Employees}" 
+            AutoGenerateColumns="False" 
+            Grid.Row="1">
+            
+            <i:Interaction.Triggers>
+                <services:RoutedEventTrigger RoutedEvent="ScrollViewer.ScrollChanged">
+                    <cal:ActionMessage MethodName="DoScroll">
+                        <cal:Parameter Value="$eventargs" />
+                    </cal:ActionMessage>
+                </services:RoutedEventTrigger>
+            </i:Interaction.Triggers>
+            
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Shifts}">
+                                <ComboBoxItem>
+                                    <TextBlock Text="{Binding Name}" />
+                                </ComboBoxItem>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridComboBoxColumn Header="Sunday" ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.Shifts}" SelectedValuePath="Id" DisplayMemberPath="Name" />
                 <DataGridComboBoxColumn Header="Monday" ItemsSource="{Binding Shifts}" />
                 <DataGridComboBoxColumn Header="Tuesday" ItemsSource="{Binding Shifts}" />
@@ -29,5 +59,5 @@
                 <DataGridComboBoxColumn Header="Friday" ItemsSource="{Binding Shifts}" />
             </DataGrid.Columns>
         </DataGrid>
-    </StackPanel>
+    </Grid>
 </UserControl>

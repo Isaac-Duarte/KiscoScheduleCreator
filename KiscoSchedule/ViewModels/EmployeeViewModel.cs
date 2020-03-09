@@ -33,7 +33,6 @@ namespace KiscoSchedule.ViewModels
             _user = user;
 
             employees = new AsyncObservableCollection<IEmployee>();
-            loadEmployeesAsync(employees.Count, 10);
             dataGridCurrentlyUpdating = false;
             busyAddingEmployees = false;
         }
@@ -95,7 +94,7 @@ namespace KiscoSchedule.ViewModels
         public async void DoScroll(ScrollChangedEventArgs e)
         {
             var scrollViewer = e.OriginalSource as ScrollViewer;
-            if (scrollViewer != null &&  scrollViewer.ScrollableHeight > 0 && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight && !busyAddingEmployees)
+            if (scrollViewer != null &&  scrollViewer.ScrollableHeight >= 0 && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight && !busyAddingEmployees)
             {
                 busyAddingEmployees = true;
                 int amount = await loadEmployeesAsync(employees.Count, 10);

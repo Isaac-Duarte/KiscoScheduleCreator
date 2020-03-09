@@ -202,16 +202,6 @@ namespace KiscoSchedule.Database.Services
 
             DbDataReader dataReader = await command.ExecuteReaderAsync();
 
-            var shifts = new Dictionary<DayOfWeek, IShift>();
-
-            foreach (DayOfWeek value in Enum.GetValues(typeof(DayOfWeek)))
-            {
-                shifts[value] = new Shift
-                {
-                    Name = "4:00 - 8:00"
-                };
-            }
-
             while (dataReader.Read())
             {
                 employees.Add(new Employee
@@ -219,8 +209,7 @@ namespace KiscoSchedule.Database.Services
                     Id = dataReader.GetInt32(0),
                     UserId = dataReader.GetInt32(1),
                     Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"]),
-                    PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"]),
-                    Shifts = shifts
+                    PhoneNumber = cryptoService.DecryptBytesToString((byte[])dataReader["PhoneNumber"])
                 });
             }
 
