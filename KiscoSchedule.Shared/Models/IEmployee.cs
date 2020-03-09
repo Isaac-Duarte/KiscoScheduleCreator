@@ -26,11 +26,6 @@ namespace KiscoSchedule.Shared.Models
         /// </summary>
         string PhoneNumber { get; set; }
 
-        /// <summary>
-        /// The shfits of the employee
-        /// </summary>
-        ObservableCollection<IShift> Shifts { get; set; }
-
-        Dictionary<DayOfWeek, IShift> ShiftsWeek { get; set; }
+        IShift Monday { get; set; }
     }
 }

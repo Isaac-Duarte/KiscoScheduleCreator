@@ -21,7 +21,7 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private IUser _user;
         private AsyncObservableCollection<IEmployee> employees;
-        private AsyncObservableCollection<IShift> shifts;
+        private static AsyncObservableCollection<IShift> shifts;
         private bool busyAddingEmployees;
 
         /// <summary>
@@ -58,11 +58,6 @@ namespace KiscoSchedule.ViewModels
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Visible));
 
             List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user, limit, offset);
-
-            newEmployees.ForEach(employee =>
-            {
-                employee.Shifts = Shifts;
-            });
 
             Employees.AddRange(newEmployees);
 
@@ -107,13 +102,12 @@ namespace KiscoSchedule.ViewModels
         /// <summary>
         /// A collection of the user's sihfts
         /// </summary>
-        public AsyncObservableCollection<IShift> Shifts
+        static public AsyncObservableCollection<IShift> Shifts
         {
             get { return shifts; }
             set
             {
                 shifts = value;
-                NotifyOfPropertyChange(() => Shifts);
             }
         }
 
@@ -126,6 +120,11 @@ namespace KiscoSchedule.ViewModels
             {
                 return DateTime.Now.ToString("MMMM", CultureInfo.InvariantCulture);
             }
+        }
+
+        public void ComboBoxChange(object sender, SelectionChangedEventArgs args)
+        {
+
         }
     }
 }

@@ -45,7 +45,11 @@
                 <DataGridTemplateColumn Header="Sunday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                            <ComboBox 
+                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                SelectedItem="{Binding Monday}" 
+                                DisplayMemberPath="Name"
+                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -102,7 +106,7 @@
                 <!-- Friday -->
 
                 <!-- Saturday -->
-                <DataGridTemplateColumn Header="Friday">
+                <DataGridTemplateColumn Header="Saturday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
