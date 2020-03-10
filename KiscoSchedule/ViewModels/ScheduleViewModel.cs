@@ -35,6 +35,7 @@ namespace KiscoSchedule.ViewModels
 
             // Load the schedule
             LoadSchedule();
+            loadEmployeesAsync();
 
             employees = new AsyncObservableCollection<IEmployee>();
             busyAddingEmployees = false;
@@ -53,37 +54,27 @@ namespace KiscoSchedule.ViewModels
         /// <summary>
         /// Loads the employees
         /// </summary>
-        public async Task<int> loadEmployeesAsync(int offset, int limit)
+        public async void loadEmployeesAsync()
         {
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Visible));
 
-            List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user, limit, offset);
+            List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user);
 
-            Employees.AddRange(newEmployees);
+            await Task.Run(() => newEmployees.ForEach(x =>
+            {
+                x.Monday = Shifts[0];
+                x.Sunday = Shifts[0];
+                x.Tuesday = Shifts[0];
+                x.Wednesday = Shifts[0];
+                x.Thursday = Shifts[0];
+                x.Friday = Shifts[0];
+                x.Saturday = Shifts[0];
+            }));
+
+            await Task.Run(() => Employees.AddRange(newEmployees));
 
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Collapsed));
 
-            return newEmployees.Count;
-        }
-
-        /// <summary>
-        /// Called when the datagrid is scolled
-        /// </summary>
-        /// <param name="e"></param>
-        public async void DoScroll(ScrollChangedEventArgs e)
-        {
-            var scrollViewer = e.OriginalSource as ScrollViewer;
-            if (scrollViewer != null && scrollViewer.ScrollableHeight >= 0 && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight && !busyAddingEmployees)
-            {
-                busyAddingEmployees = true;
-                int amount = await loadEmployeesAsync(Employees.Count, 10);
-                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - 1d);
-
-                if (amount > 0)
-                {
-                    busyAddingEmployees = false;
-                }
-            }
         }
 
         /// <summary>

@@ -26,6 +26,12 @@ namespace KiscoSchedule.Shared.Models
         /// </summary>
         string PhoneNumber { get; set; }
 
+        IShift Sunday { get; set; }
         IShift Monday { get; set; }
+        IShift Tuesday { get; set; }
+        IShift Wednesday { get; set; }
+        IShift Thursday { get; set; }
+        IShift Friday { get; set; }
+        IShift Saturday { get; set; }
     }
 }

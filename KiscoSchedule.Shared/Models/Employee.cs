@@ -11,8 +11,6 @@ namespace KiscoSchedule.Shared.Models
 {
     public class Employee : IEmployee
     {
-        private IShift monday { get; set; }
-
         /// <summary>
         /// SQLite Id of the Employee
         /// </summary>
@@ -33,10 +31,12 @@ namespace KiscoSchedule.Shared.Models
         /// </summary>
         public string PhoneNumber { get; set; }
 
-        public IShift Monday
-        {
-            get { return monday; }
-            set { monday = value; }
-        }
+        public IShift Sunday { get; set; }
+        public IShift Monday { get; set; }
+        public IShift Tuesday { get; set; }
+        public IShift Wednesday { get; set; }
+        public IShift Thursday { get; set; }
+        public IShift Friday { get; set; }
+        public IShift Saturday { get; set; }
     }
 }

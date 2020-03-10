@@ -23,21 +23,29 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+
+        </Grid.ColumnDefinitions>
+
+        <Menu IsMainMenu="True" Grid.Row="0">
+            <MenuItem Header="File" >
+                <MenuItem Header="Text Employees">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Sms" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
         
         <TextBlock Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" HorizontalAlignment="Center" Grid.Row="0" />
+
         <DataGrid 
             ItemsSource="{Binding Employees}" 
             AutoGenerateColumns="False" 
             Grid.Row="1">
-            
-            <i:Interaction.Triggers>
-                <services:RoutedEventTrigger RoutedEvent="ScrollViewer.ScrollChanged">
-                    <cal:ActionMessage MethodName="DoScroll">
-                        <cal:Parameter Value="$eventargs" />
-                    </cal:ActionMessage>
-                </services:RoutedEventTrigger>
-            </i:Interaction.Triggers>
-            
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
 
@@ -47,7 +55,7 @@
                         <DataTemplate>
                             <ComboBox 
                                 ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Monday}" 
+                                SelectedItem="{Binding Sunday}" 
                                 DisplayMemberPath="Name"
                                 cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
@@ -59,7 +67,11 @@
                 <DataGridTemplateColumn Header="Monday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/> 
+                            <ComboBox 
+                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                SelectedItem="{Binding Monday}" 
+                                DisplayMemberPath="Name"
+                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -69,7 +81,11 @@
                 <DataGridTemplateColumn Header="Tuesday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                            <ComboBox 
+                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                    SelectedItem="{Binding Tuesday}" 
+                                    DisplayMemberPath="Name"
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -79,7 +95,11 @@
                 <DataGridTemplateColumn Header="Wednesday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                            <ComboBox 
+                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                    SelectedItem="{Binding Wednesday}" 
+                                    DisplayMemberPath="Name"
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -89,7 +109,11 @@
                 <DataGridTemplateColumn Header="Thursday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                            <ComboBox 
+                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                SelectedItem="{Binding Thursday}" 
+                                DisplayMemberPath="Name"
+                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -99,7 +123,11 @@
                 <DataGridTemplateColumn Header="Friday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                            <ComboBox 
+                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                SelectedItem="{Binding Friday}" 
+                                DisplayMemberPath="Name"
+                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -109,7 +137,11 @@
                 <DataGridTemplateColumn Header="Saturday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding Shifts}" DisplayMemberPath="Name"/>
+                            <ComboBox 
+                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                SelectedItem="{Binding Saturday}" 
+                                DisplayMemberPath="Name"
+                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $eventArgs)]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
