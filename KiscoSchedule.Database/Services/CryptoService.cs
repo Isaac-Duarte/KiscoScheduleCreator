@@ -103,7 +103,7 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
-        /// Encrypts bytes using RC2
+        /// Encrypts bytes using AES
         /// </summary>
         /// <param name="rawBytes">The bytes wanting to be encrypted</param>
         /// <returns></returns>
@@ -123,7 +123,7 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
-        /// Decrypts the byes using RC2
+        /// Decrypts the byes using AES
         /// </summary>
         /// <param name="encryptedBytes">The encrypted bytes wanted to be decrypted</param>
         /// <returns></returns>
@@ -143,7 +143,7 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
-        /// Encrypts bytes using RC2
+        /// Encrypts bytes using AES
         /// </summary>
         /// <param name="raw">The string wanting to be encrypted</param>
         /// <returns></returns>
@@ -153,7 +153,7 @@ namespace KiscoSchedule.Database.Services
         }
 
         /// <summary>
-        /// Decrypts the byes using RC2 into a string
+        /// Decrypts the byes using AES into a string
         /// </summary>
         /// <param name="encryptedBytes">The encrypted bytes wanted to be decrypted</param>
         /// <returns></returns>
