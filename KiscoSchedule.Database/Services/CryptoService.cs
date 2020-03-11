@@ -16,7 +16,7 @@ namespace KiscoSchedule.Database.Services
         /// Highly reccommended that this is changed!
         /// You can use the SaltGenerator in this solution!
         /// </summary>
-        private readonly byte[] salt =
+        private static readonly byte[] salt =
         {
             0x55, 0xBC, 0x0C, 0xA8, 0xBD, 0x25, 0xBF, 0xD3, 0x6E, 0x49,
             0x7D, 0xD1, 0x35, 0x3B, 0xC0, 0xC0, 0xB5, 0xC6, 0x27, 0x1C,
@@ -65,8 +65,8 @@ namespace KiscoSchedule.Database.Services
         {
             using (SHA256Managed sha2 = new SHA256Managed())
             {
-                var hash = sha2.ComputeHash(Encoding.UTF8.GetBytes(input));
-                var strinBuilder = new StringBuilder(hash.Length * 2);
+                byte[] hash = generateSaltedHash(Encoding.UTF8.GetBytes(input), salt);
+                StringBuilder strinBuilder = new StringBuilder(hash.Length * 2);
 
                 foreach (byte b in hash)
                 {
@@ -75,6 +75,31 @@ namespace KiscoSchedule.Database.Services
 
                 return strinBuilder.ToString();
             }
+        }
+
+        /// <summary>
+        /// https://stackoverflow.com/a/2138588
+        /// </summary>
+        /// <param name="plainText"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        private static byte[] generateSaltedHash(byte[] plainText, byte[] salt)
+        {
+            HashAlgorithm algorithm = new SHA256Managed();
+
+            byte[] plainTextWithSaltBytes =
+              new byte[plainText.Length + salt.Length];
+
+            for (int i = 0; i < plainText.Length; i++)
+            {
+                plainTextWithSaltBytes[i] = plainText[i];
+            }
+            for (int i = 0; i < salt.Length; i++)
+            {
+                plainTextWithSaltBytes[plainText.Length + i] = salt[i];
+            }
+
+            return algorithm.ComputeHash(plainTextWithSaltBytes);
         }
 
         /// <summary>
