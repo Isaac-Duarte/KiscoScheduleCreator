@@ -38,8 +38,18 @@
                 </MenuItem>
             </MenuItem>
         </Menu>
-        
-        <TextBlock Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" HorizontalAlignment="Center" Grid.Row="0" />
+
+        <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+            <DatePicker
+                SelectedDate="{Binding SelectedDate}"
+                Margin="10 0"
+                VerticalAlignment="Center"
+                Width="100"
+                materialDesign:HintAssist.Hint="Pick Date"
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                />
+        </StackPanel>
 
         <DataGrid 
             ItemsSource="{Binding Employees}" 

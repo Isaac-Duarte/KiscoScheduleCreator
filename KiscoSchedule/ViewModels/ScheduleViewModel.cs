@@ -23,6 +23,7 @@ namespace KiscoSchedule.ViewModels
         private AsyncObservableCollection<IEmployee> employees;
         private static AsyncObservableCollection<IShift> shifts;
         private bool busyAddingEmployees;
+        private DateTime selectedDate;
 
         /// <summary>
         /// Constuctor for ScheduleViewModel
@@ -34,21 +35,31 @@ namespace KiscoSchedule.ViewModels
             _user = user;
 
             // Load the schedule
-            LoadSchedule();
+            loadSchedule();
             loadEmployeesAsync();
 
             employees = new AsyncObservableCollection<IEmployee>();
             busyAddingEmployees = false;
+            SelectedDate = DateTime.Now;
         }
 
         /// <summary>
         /// Loads the schedule async
         /// </summary>
-        private async void LoadSchedule()
+        private async void loadSchedule()
         {
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
             Shifts = new AsyncObservableCollection<IShift>(await _databaseService.GetShiftsAsync(_user));
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
+        }
+
+        /// <summary>
+        /// Loads a certain template
+        /// </summary>
+        /// <param name="date"></param>
+        private async void loadTemplate(DateTime date)
+        {
+
         }
 
         /// <summary>
@@ -59,17 +70,6 @@ namespace KiscoSchedule.ViewModels
             _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Visible));
 
             List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user);
-
-            await Task.Run(() => newEmployees.ForEach(x =>
-            {
-                x.Monday = Shifts[0];
-                x.Sunday = Shifts[0];
-                x.Tuesday = Shifts[0];
-                x.Wednesday = Shifts[0];
-                x.Thursday = Shifts[0];
-                x.Friday = Shifts[0];
-                x.Saturday = Shifts[0];
-            }));
 
             await Task.Run(() => Employees.AddRange(newEmployees));
 
@@ -109,7 +109,21 @@ namespace KiscoSchedule.ViewModels
         {   
             get
             {
-                return DateTime.Now.ToString("MMMM", CultureInfo.InvariantCulture);
+                return SelectedDate.ToString("MMMM", CultureInfo.InvariantCulture) + " " + SelectedDate.ToString("dd-") + SelectedDate.AddDays(6).ToString("dd");
+            }
+        }
+
+        public DateTime SelectedDate
+        {
+            get
+            {
+                return selectedDate;
+            }
+            set
+            {
+                selectedDate = value.AddDays(-(int)value.DayOfWeek);
+                NotifyOfPropertyChange(() => SelectedDate);
+                NotifyOfPropertyChange(() => Month);
             }
         }
 
