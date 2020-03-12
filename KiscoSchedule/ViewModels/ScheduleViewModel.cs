@@ -24,6 +24,7 @@ namespace KiscoSchedule.ViewModels
         private static AsyncObservableCollection<IShift> shifts;
         private bool busyAddingEmployees;
         private DateTime selectedDate;
+        private ISchedule schedule;
 
         /// <summary>
         /// Constuctor for ScheduleViewModel
@@ -34,13 +35,13 @@ namespace KiscoSchedule.ViewModels
             _events = events;
             _user = user;
 
-            // Load the schedule
-            loadSchedule();
-            loadEmployeesAsync();
-
             employees = new AsyncObservableCollection<IEmployee>();
             busyAddingEmployees = false;
             SelectedDate = DateTime.Now;
+
+            // Load the schedule
+            loadSchedule();
+            loadSchedule(SelectedDate);
         }
 
         /// <summary>
@@ -49,7 +50,14 @@ namespace KiscoSchedule.ViewModels
         private async void loadSchedule()
         {
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
+            // Load shifts
             Shifts = new AsyncObservableCollection<IShift>(await _databaseService.GetShiftsAsync(_user));
+
+            // Load employees
+            List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user);
+
+            await Task.Run(() => Employees.AddRange(newEmployees));
+
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
         }
 
@@ -57,24 +65,42 @@ namespace KiscoSchedule.ViewModels
         /// Loads a certain template
         /// </summary>
         /// <param name="date"></param>
-        private async void loadTemplate(DateTime date)
+        private async void loadSchedule(DateTime date)
         {
+            schedule = await _databaseService.GetScheduleAsync(date);
 
-        }
+            if (schedule.Id == 0 || schedule.Date == null)
+            {
+                schedule.UserId = _user.Id;
+                schedule.Date = SelectedDate;
+                schedule.Shifts = new Dictionary<int, ShiftTemplate>();
 
-        /// <summary>
-        /// Loads the employees
-        /// </summary>
-        public async void loadEmployeesAsync()
-        {
-            _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Visible));
+                await _databaseService.CreateScheduleAsync(_user, schedule);
+            }
 
-            List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user);
-
-            await Task.Run(() => Employees.AddRange(newEmployees));
-
-            _events.PublishOnUIThread(new ProgressEventModel(System.Windows.Visibility.Collapsed));
-
+            await Task.Run(() =>
+            {
+                foreach (IEmployee employee in employees)
+                {
+                    if (schedule.Shifts.ContainsKey((int)employee.Id))
+                    {
+                        try
+                        {
+                            employee.Sunday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Sunday]).FirstOrDefault();
+                            employee.Monday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Monday]).FirstOrDefault();
+                            employee.Tuesday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Tuesday]).FirstOrDefault();
+                            employee.Wednesday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Wednesday]).FirstOrDefault();
+                            employee.Thursday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Thursday]).FirstOrDefault();
+                            employee.Friday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Friday]).FirstOrDefault();
+                            employee.Saturday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Saturday]).FirstOrDefault();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("I hat emy life.");
+                        }
+                    }
+                }
+            });
         }
 
         /// <summary>
@@ -113,6 +139,9 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
+        /// <summary>
+        /// The selected date for the schedule
+        /// </summary>
         public DateTime SelectedDate
         {
             get
@@ -127,9 +156,22 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
-        public void ComboBoxChange(object sender, SelectionChangedEventArgs args)
+        public async void ComboBoxChange(object sender, object dataContext, SelectionChangedEventArgs args)
         {
+            IEmployee employee = (Employee)dataContext;
+            IShift shift = (Shift)sender;
 
+            if (!schedule.Shifts.ContainsKey((int)employee.Id))
+            {
+                schedule.Shifts[(int)employee.Id] = new ShiftTemplate
+                {
+                    Shifts = new Dictionary<DayOfWeek, int>()
+                };
+
+                schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Sunday] = (int)shift.Id;
+            }
+
+            await _databaseService.UpdateScheduleAsync(schedule);
         }
     }
 }

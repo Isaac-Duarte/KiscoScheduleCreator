@@ -63,12 +63,11 @@
     <Compile Include="Models\IEmployee.cs" />
     <Compile Include="Models\ISetting.cs" />
     <Compile Include="Models\IShift.cs" />
-    <Compile Include="Models\ITemplate.cs" />
+    <Compile Include="Models\ISchedule.cs" />
     <Compile Include="Models\IUser.cs" />
-    <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\Shift.cs" />
-    <Compile Include="Models\Template.cs" />
+    <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\FileUtil.cs" />

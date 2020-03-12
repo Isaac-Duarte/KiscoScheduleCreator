@@ -151,5 +151,41 @@ namespace KiscoSchedule.Database.Services
         /// <param name="setting"></param>
         /// <returns></returns>
         Task RemoveShiftsAsync(IShift shift);
+
+        /// <summary>
+        /// Creates a Schedule async
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="Schedule"></param>
+        /// <returns></returns>
+        Task<long> CreateScheduleAsync(IUser user, ISchedule Schedule);
+
+        /// <summary>
+        /// Updates a tempalte async
+        /// </summary>
+        /// <param name="Schedule"></param>
+        /// <returns></returns>
+        Task UpdateScheduleAsync(ISchedule Schedule);
+
+        /// <summary>
+        /// Gets a Schedule async
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<List<ISchedule>> GetSchedulesAsync(IUser user);
+
+        /// <summary>
+        /// Get a specific Schedule
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<ISchedule> GetScheduleAsync(DateTime date);
+
+        /// <summary>
+        /// Removes a tempalte async
+        /// </summary>
+        /// <param name="Schedule"></param>
+        /// <returns></returns>
+        Task RemoveScheduleAsync(ISchedule Schedule);
     }
 }

@@ -1,27 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KiscoSchedule.Shared.Models
 {
-    public class Schedule
+    public class Schedule : ISchedule
     {
         /// <summary>
-        /// This is the SQL Id of the schedule
+        /// The employee id
         /// </summary>
         public int Id { get; set; }
 
-        /// <summary>
-        /// This is the starting date of the schedule
-        /// </summary>
+        public int UserId { get; set; }
+
         public DateTime Date { get; set; }
 
         /// <summary>
-        /// Templates of an employee
+        /// The shifts of the employee
         /// </summary>
-        public ObservableCollection<Template> EmployeeTemplates { get; set; }
+        public Dictionary<int, ShiftTemplate> Shifts { get; set; }
+    }
+
+    public class ShiftTemplate : IShiftTemplate
+    {
+        public Dictionary<DayOfWeek, int> Shifts { get; set; }
+    }
+
+    public interface IShiftTemplate
+    {
+        Dictionary<DayOfWeek, int> Shifts { get; set; }
     }
 }

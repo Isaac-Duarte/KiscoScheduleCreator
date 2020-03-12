@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KiscoSchedule.Shared.Models;
 using KiscoSchedule.Shared.Util;
+using Newtonsoft.Json;
 
 namespace KiscoSchedule.Database.Services
 {
@@ -55,10 +56,10 @@ namespace KiscoSchedule.Database.Services
 
             // Create Schedules table
             queryString = @"CREATE TABLE IF NOT EXISTS 'Schedules' (
-	            'Id'	INTEGER PRIMARY KEY AUTOINCREMENT,
-                'UserId'    INTEGER
-	            'Date'	BLOB,
-	            'Data'	BLOB
+                'Id'    INTEGER PRIMARY KEY AUTOINCREMENT,
+                'UserId'    INTEGER,
+	            'Data'  BLOB,
+	            'Date'  TEXT
             );";
 
             command = new SQLiteCommand(queryString, sqliteConnection);
@@ -84,6 +85,7 @@ namespace KiscoSchedule.Database.Services
 
             command = new SQLiteCommand(queryString, sqliteConnection);
             await command.ExecuteNonQueryAsync();
+
         }
 
         /// <summary>
@@ -431,6 +433,105 @@ namespace KiscoSchedule.Database.Services
         {
             SQLiteCommand command = new SQLiteCommand("DELETE FROM Shifts Where Id=@Id", sqliteConnection);
             command.Parameters.AddWithValue("Id", shift.Id);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Creates a Schedule async
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="Schedule"></param>
+        /// <returns></returns>
+        public async Task<long> CreateScheduleAsync(IUser user, ISchedule Schedule)
+        {
+            SQLiteCommand command = new SQLiteCommand("INSERT INTO Schedules (UserId, Date, Data) VALUES(@UserId, @Date, @Data)", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+            command.Parameters.AddWithValue("Date", Schedule.Date.ToString("yyyy-MM-dd"));
+            command.Parameters.AddWithValue("Data", cryptoService.EncryptString(JsonConvert.SerializeObject(Schedule.Shifts)));
+
+            await command.ExecuteNonQueryAsync();
+            return sqliteConnection.LastInsertRowId;
+        }
+
+        /// <summary>
+        /// Updates a tempalte async
+        /// </summary>
+        /// <param name="Schedule"></param>
+        /// <returns></returns>
+        public async Task UpdateScheduleAsync(ISchedule Schedule)
+        {
+            SQLiteCommand command = new SQLiteCommand("Update Schedules Set Data = @Data WHERE Id = @Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", Schedule.Id);
+            command.Parameters.AddWithValue("Data", cryptoService.EncryptString(JsonConvert.SerializeObject(Schedule.Shifts)));
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// Gets a Schedule async
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<List<ISchedule>> GetSchedulesAsync(IUser user)
+        {
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Schedules Where UserId=@UserId", sqliteConnection);
+            command.Parameters.AddWithValue("UserId", user.Id);
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+
+            List<ISchedule> schedules = new List<ISchedule>();
+
+            while (dataReader.Read())
+            {
+                schedules.Add(new Schedule
+                {
+                    Id = dataReader.GetInt32(0),
+                    UserId = dataReader.GetInt32(1),
+                    Date = DateTime.Parse(cryptoService.DecryptBytesToString((byte[])dataReader["Date"])),
+                    Shifts = JsonConvert.DeserializeObject<Dictionary<int, ShiftTemplate>>(cryptoService.DecryptBytesToString((byte[])dataReader["Data"]))
+                });
+            }
+
+            return schedules;
+        }
+
+        /// <summary>
+        /// Get a specific Schedule
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<ISchedule> GetScheduleAsync(DateTime date)
+        {
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Schedules Where Date=@Date", sqliteConnection);
+            command.Parameters.AddWithValue("Date", date.ToString("yyyy-MM-dd"));
+
+            DbDataReader dataReader = await command.ExecuteReaderAsync();
+            
+            ISchedule schedule = new Schedule();
+
+            while (dataReader.Read())
+            {
+                string json = cryptoService.DecryptBytesToString((byte[])dataReader["Data"]);
+
+                schedule.Id = dataReader.GetInt32(0);
+                schedule.UserId = dataReader.GetInt32(1);
+                schedule.Date = DateTime.Parse((string)dataReader["Date"]);
+                schedule.Shifts = JsonConvert.DeserializeObject<Dictionary<int, ShiftTemplate>>(cryptoService.DecryptBytesToString((byte[])dataReader["Data"]));
+            }
+
+            return schedule;
+        }
+
+        /// <summary>
+        /// Removes a tempalte async
+        /// </summary>
+        /// <param name="Schedule"></param>
+        /// <returns></returns>
+        public async Task RemoveScheduleAsync(ISchedule Schedule)
+        {
+            SQLiteCommand command = new SQLiteCommand("DELETE FROM Schedules Where Id=@Id", sqliteConnection);
+            command.Parameters.AddWithValue("Id", Schedule.Id);
 
             await command.ExecuteNonQueryAsync();
         }
