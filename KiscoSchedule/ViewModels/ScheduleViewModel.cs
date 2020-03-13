@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -80,7 +81,7 @@ namespace KiscoSchedule.ViewModels
 
             await Task.Run(() =>
             {
-                foreach (IEmployee employee in employees)
+                foreach (IEmployee employee in Employees)
                 {
                     if (schedule.Shifts.ContainsKey((int)employee.Id))
                     {
@@ -94,9 +95,32 @@ namespace KiscoSchedule.ViewModels
                             employee.Friday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Friday]).FirstOrDefault();
                             employee.Saturday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Saturday]).FirstOrDefault();
                         }
-                        catch (Exception e)
+                        catch
                         {
-                            Console.WriteLine("I hat emy life.");
+                            
+                        }
+                    }
+                    else
+                    {
+                        schedule.Shifts[(int)employee.Id] = new ShiftTemplate
+                        {
+                            Shifts = new Dictionary<DayOfWeek, int>()
+                        };
+
+                        if (Shifts.Count > 0)
+                        {
+                            foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+                            {
+                                schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
+                                // Jesus I hate WPF (or maybe i'm stupid)
+                                employee.Sunday = Shifts[0];
+                                employee.Monday = Shifts[0];
+                                employee.Tuesday = Shifts[0];
+                                employee.Wednesday = Shifts[0];
+                                employee.Thursday = Shifts[0];
+                                employee.Friday = Shifts[0];
+                                employee.Saturday = Shifts[0];
+                            }
                         }
                     }
                 }
@@ -153,10 +177,11 @@ namespace KiscoSchedule.ViewModels
                 selectedDate = value.AddDays(-(int)value.DayOfWeek);
                 NotifyOfPropertyChange(() => SelectedDate);
                 NotifyOfPropertyChange(() => Month);
+                loadSchedule(selectedDate);
             }
         }
 
-        public async void ComboBoxChange(object sender, object dataContext, SelectionChangedEventArgs args)
+        public async void ComboBoxChange(object sender, object dataContext, SelectionChangedEventArgs args, DayOfWeek day)
         {
             IEmployee employee = (Employee)dataContext;
             IShift shift = (Shift)sender;
@@ -168,8 +193,16 @@ namespace KiscoSchedule.ViewModels
                     Shifts = new Dictionary<DayOfWeek, int>()
                 };
 
-                schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Sunday] = (int)shift.Id;
+                if (Shifts.Count > 0)
+                {
+                    foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+                    {
+                        schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
+                    }
+                }
             }
+
+            schedule.Shifts[(int)employee.Id].Shifts[day] = (int)shift.Id;
 
             await _databaseService.UpdateScheduleAsync(schedule);
         }
