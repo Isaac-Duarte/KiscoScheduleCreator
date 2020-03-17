@@ -17,9 +17,8 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
-    <materialDesign:DialogHost Identifier="RootDialog">
-        <Grid>
-            <DataGrid
+    <Grid>
+        <DataGrid
             ItemsSource="{Binding Employees}"
             SelectionMode="Single"
             SelectedItem="{Binding SelectedEmployee}"
@@ -29,49 +28,48 @@
             materialDesign:DataGridAssist.CellPadding="13 8 8 8"
             cal:Message.Attach="[Event RowEditEnding] = [Action DataGrid_RowEditEnding($source, $this, $eventArgs)]"
             materialDesign:DataGridAssist.ColumnHeaderPadding="8">
-                <i:Interaction.Triggers>
-                    <services:RoutedEventTrigger RoutedEvent="ScrollViewer.ScrollChanged">
-                        <cal:ActionMessage MethodName="DoScroll">
-                            <cal:Parameter Value="$eventargs" />
-                        </cal:ActionMessage>
-                    </services:RoutedEventTrigger>
-                </i:Interaction.Triggers>
+            <i:Interaction.Triggers>
+                <services:RoutedEventTrigger RoutedEvent="ScrollViewer.ScrollChanged">
+                    <cal:ActionMessage MethodName="DoScroll">
+                        <cal:Parameter Value="$eventargs" />
+                    </cal:ActionMessage>
+                </services:RoutedEventTrigger>
+            </i:Interaction.Triggers>
 
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem cal:Message.Attach="[Event Click] = [Action RemoveClick($dataContext)]" Header="Remove" />
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem cal:Message.Attach="[Event Click] = [Action RemoveClick($dataContext)]" Header="Remove" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn
+            <DataGrid.Columns>
+                <DataGridTextColumn
                     Binding="{Binding Id}"
                     Header="Id"
                     IsReadOnly="True"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
 
-                    <DataGridTextColumn
+                <DataGridTextColumn
                     Binding="{Binding Name}"
                     Header="Name"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
 
-                    <DataGridTextColumn
+                <DataGridTextColumn
                     Binding="{Binding PhoneNumber}"
                     Header="Phone Number"
                     EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
-                </DataGrid.Columns>
-            </DataGrid>
+            </DataGrid.Columns>
+        </DataGrid>
 
-            <Button x:Name="Add"
-                    Style="{StaticResource MaterialDesignFloatingActionButton}"
+        <Button x:Name="Add"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    Margin="5">
-                <materialDesign:PackIcon
+                    Margin="10">
+            <materialDesign:PackIcon
                     Kind="Add"
                     Height="24"
                     Width="24" />
-            </Button>
-        </Grid>
-    </materialDesign:DialogHost>
+        </Button>
+    </Grid>
 </UserControl>

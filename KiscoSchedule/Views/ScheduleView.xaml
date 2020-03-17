@@ -31,7 +31,7 @@
 
         <Menu IsMainMenu="True" Grid.Row="0">
             <MenuItem Header="File" >
-                <MenuItem Header="Save"> 
+                <MenuItem x:Name="Save" Header="Save" >
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ContentSave" />
                     </MenuItem.Icon>
@@ -84,9 +84,9 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox 
-                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Sunday}" 
+                                SelectedItem="{Binding Path=Sunday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 DisplayMemberPath="Name"
+                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
                                 cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Sunday')]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

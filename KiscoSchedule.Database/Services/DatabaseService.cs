@@ -250,8 +250,6 @@ namespace KiscoSchedule.Database.Services
         /// <param name="employee"></param>
         public async Task<long> CreateEmployeeAsync(IUser user, IEmployee employee)
         {
-            List<string> dateTimes = new List<string>();
-
             SQLiteCommand command = new SQLiteCommand("INSERT INTO Employees (UserId, Name, PhoneNumber) VALUES(@UserId, @Name, @PhoneNumber)", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
             command.Parameters.AddWithValue("Name", cryptoService.EncryptBytes(Encoding.UTF8.GetBytes(employee.Name)));
@@ -512,8 +510,6 @@ namespace KiscoSchedule.Database.Services
 
             while (dataReader.Read())
             {
-                string json = cryptoService.DecryptBytesToString((byte[])dataReader["Data"]);
-
                 schedule.Id = dataReader.GetInt32(0);
                 schedule.UserId = dataReader.GetInt32(1);
                 schedule.Date = DateTime.Parse((string)dataReader["Date"]);

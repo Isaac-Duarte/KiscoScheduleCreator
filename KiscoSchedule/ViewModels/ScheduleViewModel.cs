@@ -23,7 +23,6 @@ namespace KiscoSchedule.ViewModels
         private IUser _user;
         private AsyncObservableCollection<IEmployee> employees;
         private static AsyncObservableCollection<IShift> shifts;
-        private bool busyAddingEmployees;
         private DateTime selectedDate;
         private ISchedule schedule;
 
@@ -37,7 +36,6 @@ namespace KiscoSchedule.ViewModels
             _user = user;
 
             employees = new AsyncObservableCollection<IEmployee>();
-            busyAddingEmployees = false;
             SelectedDate = DateTime.Now;
 
             // Load the schedule
@@ -68,6 +66,8 @@ namespace KiscoSchedule.ViewModels
         /// <param name="date"></param>
         private async void loadSchedule(DateTime date)
         {
+            _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
+
             schedule = await _databaseService.GetScheduleAsync(date);
 
             if (schedule.Id == 0 || schedule.Date == null)
@@ -76,11 +76,12 @@ namespace KiscoSchedule.ViewModels
                 schedule.Date = SelectedDate;
                 schedule.Shifts = new Dictionary<int, ShiftTemplate>();
 
-                await _databaseService.CreateScheduleAsync(_user, schedule);
+                schedule.Id = (int)await _databaseService.CreateScheduleAsync(_user, schedule);
             }
 
             await Task.Run(() =>
             {
+                _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
                 foreach (IEmployee employee in Employees)
                 {
                     if (schedule.Shifts.ContainsKey((int)employee.Id))
@@ -97,7 +98,7 @@ namespace KiscoSchedule.ViewModels
                         }
                         catch
                         {
-                            
+
                         }
                     }
                     else
@@ -112,19 +113,23 @@ namespace KiscoSchedule.ViewModels
                             foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
                             {
                                 schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
-                                // Jesus I hate WPF (or maybe i'm stupid)
-                                employee.Sunday = Shifts[0];
-                                employee.Monday = Shifts[0];
-                                employee.Tuesday = Shifts[0];
-                                employee.Wednesday = Shifts[0];
-                                employee.Thursday = Shifts[0];
-                                employee.Friday = Shifts[0];
-                                employee.Saturday = Shifts[0];
                             }
+
+                            employee.Sunday = Shifts[0];
+                            employee.Monday = Shifts[0];
+                            employee.Tuesday = Shifts[0];
+                            employee.Wednesday = Shifts[0];
+                            employee.Thursday = Shifts[0];
+                            employee.Friday = Shifts[0];
+                            employee.Saturday = Shifts[0];
                         }
                     }
                 }
             });
+
+            NotifyOfPropertyChange(() => Employees);
+
+            _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
         }
 
         /// <summary>
@@ -181,7 +186,7 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
-        public async void ComboBoxChange(object sender, object dataContext, SelectionChangedEventArgs args, DayOfWeek day)
+        public void ComboBoxChange(object sender, object dataContext, SelectionChangedEventArgs args, DayOfWeek day)
         {
             IEmployee employee = (Employee)dataContext;
             IShift shift = (Shift)sender;
@@ -203,7 +208,10 @@ namespace KiscoSchedule.ViewModels
             }
 
             schedule.Shifts[(int)employee.Id].Shifts[day] = (int)shift.Id;
+        }
 
+        public async void Save()
+        {
             await _databaseService.UpdateScheduleAsync(schedule);
         }
     }
