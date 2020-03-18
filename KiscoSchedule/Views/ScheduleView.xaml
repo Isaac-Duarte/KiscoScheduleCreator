@@ -37,7 +37,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 
-                <MenuItem Header="Export">
+                <MenuItem x:Name="Export" Header="Export">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="Export" />
                     </MenuItem.Icon>
@@ -83,10 +83,10 @@
                 <DataGridTemplateColumn Header="Sunday">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox 
-                                SelectedItem="{Binding Path=Sunday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            <ComboBox
                                 DisplayMemberPath="Name"
                                 ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                SelectedItem="{Binding Sunday}" 
                                 cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Sunday')]"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

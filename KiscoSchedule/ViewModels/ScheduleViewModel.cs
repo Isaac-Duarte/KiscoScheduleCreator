@@ -3,6 +3,7 @@ using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
 using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Models;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace KiscoSchedule.ViewModels
 {
@@ -213,6 +215,67 @@ namespace KiscoSchedule.ViewModels
         public async void Save()
         {
             await _databaseService.UpdateScheduleAsync(schedule);
+        }
+
+        public void Export()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Excel file (*.xls)|*.xls";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                Excel._Application app = new Excel.Application();
+                Excel._Workbook workbook = app.Workbooks.Add(Type.Missing);
+                Excel._Worksheet worksheet;
+
+                worksheet = workbook.Sheets["Sheet1"];
+                worksheet = workbook.ActiveSheet;
+
+                worksheet.Name = Month;
+
+                // storing header part in Excel  
+                worksheet.Cells[1, 1] = SelectedDate.ToString("MMMM");
+
+                for (int x = 1; x < 8; x++)
+                {
+                    worksheet.Cells[1, x + 1] = SelectedDate.AddDays((long)x - 1).ToString("dd");
+                }
+
+                worksheet.Cells[3, 1] = "Employee";
+
+                int i = 1;
+
+                foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+                {
+                    i++;
+
+                    worksheet.Cells[2, i] = dayOfWeek.ToString();
+                }
+
+                i = 2;
+                foreach (Employee employee in Employees)
+                {
+                    i++;
+
+                    worksheet.Cells[i, 1] = employee.Name;
+                    worksheet.Cells[i, 2] = employee.Sunday.Name;
+                    worksheet.Cells[i, 3] = employee.Monday.Name;
+                    worksheet.Cells[i, 4] = employee.Tuesday.Name;
+                    worksheet.Cells[i, 5] = employee.Wednesday.Name;
+                    worksheet.Cells[i, 6] = employee.Thursday.Name;
+                    worksheet.Cells[i, 7] = employee.Friday.Name;
+                    worksheet.Cells[i, 8] = employee.Saturday.Name;
+                }
+
+                worksheet.Columns.AutoFit();
+
+                Excel.Range last = worksheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell, Type.Missing);
+                Excel.Range range = worksheet.get_Range("A1", last);
+                range.Style.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
+
+                workbook.SaveAs(saveFileDialog.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                app.Quit();
+            }
         }
     }
 }
