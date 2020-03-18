@@ -233,7 +233,6 @@ namespace KiscoSchedule.ViewModels
 
                 worksheet.Name = Month;
 
-                // storing header part in Excel  
                 worksheet.Cells[1, 1] = SelectedDate.ToString("MMMM");
 
                 for (int x = 1; x < 8; x++)
