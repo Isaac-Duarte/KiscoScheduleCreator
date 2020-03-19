@@ -1,4 +1,6 @@
-﻿namespace KiscoSchedule.Shared.Models
+﻿using KiscoSchedule.Shared.Enums;
+
+namespace KiscoSchedule.Shared.Models
 {
     public interface ISetting
     {
@@ -15,7 +17,7 @@
         /// <summary>
         /// The key string of the setting
         /// </summary>
-        string Key { get; set; }
+        SettingEnum Key { get; set; }
 
         /// <summary>
         /// The value of the setting

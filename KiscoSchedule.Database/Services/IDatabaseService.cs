@@ -1,4 +1,5 @@
-﻿using KiscoSchedule.Shared.Models;
+﻿using KiscoSchedule.Shared.Enums;
+using KiscoSchedule.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -113,7 +114,7 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        Task<Dictionary<string, ISetting>> GetSettingsAsync(IUser user);
+        Task<Dictionary<SettingEnum, ISetting>> GetSettingsAsync(IUser user);
 
         /// <summary>
         /// Removes a setting given the setting object

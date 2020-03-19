@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Setting.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\IEmployee.cs" />
     <Compile Include="Models\ISetting.cs" />
@@ -73,9 +74,7 @@
     <Compile Include="Util\FileUtil.cs" />
     <Compile Include="Util\SmsService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

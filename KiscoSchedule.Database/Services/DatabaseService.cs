@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KiscoSchedule.Shared.Enums;
 using KiscoSchedule.Shared.Models;
 using KiscoSchedule.Shared.Util;
 using Newtonsoft.Json;
@@ -298,7 +299,7 @@ namespace KiscoSchedule.Database.Services
         {
             SQLiteCommand command = new SQLiteCommand("INSERT INTO Settings (UserId, Key, Value) VALUES(@UserId, @Key, @Value)", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
-            command.Parameters.AddWithValue("Key", cryptoService.EncryptString(setting.Key));
+            command.Parameters.AddWithValue("Key", cryptoService.EncryptBytes(BitConverter.GetBytes((int)setting.Key)));
             command.Parameters.AddWithValue("Value", cryptoService.EncryptString(setting.Value));
 
             await command.ExecuteNonQueryAsync();
@@ -315,7 +316,7 @@ namespace KiscoSchedule.Database.Services
         {
             SQLiteCommand command = new SQLiteCommand("Update Settings Set Key = @Key, Value = @Value WHERE Id = @Id", sqliteConnection);
             command.Parameters.AddWithValue("Id", setting.Id);
-            command.Parameters.AddWithValue("Key", cryptoService.EncryptString(setting.Key));
+            command.Parameters.AddWithValue("Key", cryptoService.EncryptBytes(BitConverter.GetBytes((int)setting.Key)));
             command.Parameters.AddWithValue("Value", cryptoService.EncryptString(setting.Value));
 
             await command.ExecuteNonQueryAsync();
@@ -326,14 +327,14 @@ namespace KiscoSchedule.Database.Services
         /// </summary>
         /// <param name="employee"></param>
         /// <returns></returns>
-        public async Task<Dictionary<string, ISetting>> GetSettingsAsync(IUser user)
+        public async Task<Dictionary<SettingEnum, ISetting>> GetSettingsAsync(IUser user)
         {
             SQLiteCommand command = new SQLiteCommand("SELECT * FROM Settings Where UserId=@UserId", sqliteConnection);
             command.Parameters.AddWithValue("UserId", user.Id);
 
             DbDataReader dataReader = await command.ExecuteReaderAsync();
 
-            Dictionary<string, ISetting> settings = new Dictionary<string, ISetting>();
+            Dictionary<SettingEnum, ISetting> settings = new Dictionary<SettingEnum, ISetting>();
             
             while (dataReader.Read())
             {
@@ -341,7 +342,7 @@ namespace KiscoSchedule.Database.Services
                 {
                     Id = dataReader.GetInt32(0),
                     UserId = dataReader.GetInt32(1),
-                    Key = cryptoService.DecryptBytesToString((byte[])dataReader["Key"]),
+                    Key = (SettingEnum)BitConverter.ToInt32(cryptoService.DecryptBytes((byte[])dataReader["Key"]), 0),
                     Value = cryptoService.DecryptBytesToString((byte[])dataReader["Value"])
                 };
 

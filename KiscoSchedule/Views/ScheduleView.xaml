@@ -45,7 +45,7 @@
 
                     <Separator />
                 
-                    <MenuItem Header="Text Employees">
+                    <MenuItem x:Name="TextMessage" Header="Text Employees">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="Sms" />
                         </MenuItem.Icon>

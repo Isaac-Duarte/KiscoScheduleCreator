@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.Shared.Models;
+using KiscoSchedule.Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,11 @@ namespace KiscoSchedule.ViewModels
         private IDatabaseService _databaseService;
         private IEventAggregator _events;
         private IUser _user;
-        private Dictionary<string, ISetting> settings;
+        private Dictionary<SettingEnum, ISetting> settings;
         private string twilioAccountSID;
         private string twilioAuthToken;
         private string twilioPhoneNumber;
+        private string textMessageReply;
 
         public SettingsViewModel(IDatabaseService databaseHelper, IEventAggregator events, IUser user)
         {
@@ -35,13 +37,15 @@ namespace KiscoSchedule.ViewModels
         {
             settings = await _databaseService.GetSettingsAsync(_user);
 
-            await validateSetting("ACCOUNT_SID");
-            await validateSetting("AUTH_TOKEN");
-            await validateSetting("PHONE_NUMBER");
+            await validateSetting(SettingEnum.ACCOUNT_SID);
+            await validateSetting(SettingEnum.AUTH_TOKEN);
+            await validateSetting(SettingEnum.PHONE_NUMBER);
+            await validateSetting(SettingEnum.TEXT_MESSAGE);
 
-            twilioAccountSID = settings["ACCOUNT_SID"].Value;
-            twilioAuthToken = settings["AUTH_TOKEN"].Value;
-            twilioPhoneNumber = settings["PHONE_NUMBER"].Value;
+            twilioAccountSID = settings[SettingEnum.ACCOUNT_SID].Value;
+            twilioAuthToken = settings[SettingEnum.AUTH_TOKEN].Value;
+            twilioPhoneNumber = settings[SettingEnum.PHONE_NUMBER].Value;
+            textMessageReply = settings[SettingEnum.TEXT_MESSAGE].Value;
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace KiscoSchedule.ViewModels
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        private async Task validateSetting(string key)
+        private async Task validateSetting(SettingEnum key)
         {
             if (!settings.ContainsKey(key))
             {
@@ -70,7 +74,7 @@ namespace KiscoSchedule.ViewModels
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        private async void updateSetting(string key, string value)
+        private async void updateSetting(SettingEnum key, string value)
         {
             if (!settings.ContainsKey(key))
             {
@@ -95,7 +99,7 @@ namespace KiscoSchedule.ViewModels
             {
                 twilioAccountSID = value;
                 NotifyOfPropertyChange(() => TwilioAccountSID);
-                updateSetting("ACCOUNT_SID", value);
+                updateSetting(SettingEnum.ACCOUNT_SID, value);
             }
         }
 
@@ -112,7 +116,7 @@ namespace KiscoSchedule.ViewModels
             {
                 twilioAuthToken = value;
                 NotifyOfPropertyChange(() => TwilioAuthToken);
-                updateSetting("AUTH_TOKEN", value);
+                updateSetting(SettingEnum.AUTH_TOKEN, value);
             }
         }
 
@@ -129,7 +133,24 @@ namespace KiscoSchedule.ViewModels
             {
                 twilioPhoneNumber = value;
                 NotifyOfPropertyChange(() => TwilioPhoneNumber);
-                updateSetting("PHONE_NUMBER", value);
+                updateSetting(SettingEnum.PHONE_NUMBER, value);
+            }
+        }
+
+        /// <summary>
+        /// Phone number setting
+        /// </summary>
+        public string TextMessageReply
+        {
+            get
+            {
+                return textMessageReply;
+            }
+            set
+            {
+                textMessageReply = value;
+                NotifyOfPropertyChange(() => TextMessageReply);
+                updateSetting(SettingEnum.TEXT_MESSAGE, value);
             }
         }
     }

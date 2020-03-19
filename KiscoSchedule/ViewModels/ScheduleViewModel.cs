@@ -2,7 +2,9 @@
 using KiscoSchedule.Database.Services;
 using KiscoSchedule.EventModels;
 using KiscoSchedule.Services;
+using KiscoSchedule.Shared.Enums;
 using KiscoSchedule.Shared.Models;
+using KiscoSchedule.Shared.Util;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -113,11 +115,6 @@ namespace KiscoSchedule.ViewModels
 
                         if (Shifts.Count > 0)
                         {
-                            foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-                            {
-                                schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
-                            }
-
                             employee.Sunday = Shifts[0];
                             employee.Monday = Shifts[0];
                             employee.Tuesday = Shifts[0];
@@ -125,11 +122,15 @@ namespace KiscoSchedule.ViewModels
                             employee.Thursday = Shifts[0];
                             employee.Friday = Shifts[0];
                             employee.Saturday = Shifts[0];
+
+                            foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+                            {
+                                schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
+                            }
                         }
                     }
                 }
             });
-
 
             CollectionViewSource.GetDefaultView(Employees).Refresh();
 
@@ -276,6 +277,61 @@ namespace KiscoSchedule.ViewModels
 
                 workbook.SaveAs(saveFileDialog.FileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
                 app.Quit();
+            }
+        }
+
+        public async void TextMessage()
+        {
+            Dictionary<SettingEnum, ISetting> settings = await _databaseService.GetSettingsAsync(_user);
+
+            await validateSetting(settings, SettingEnum.ACCOUNT_SID);
+            await validateSetting(settings, SettingEnum.AUTH_TOKEN);
+            await validateSetting(settings, SettingEnum.PHONE_NUMBER);
+            await validateSetting(settings, SettingEnum.TEXT_MESSAGE);
+
+            string twilioAccountSID = settings[SettingEnum.ACCOUNT_SID].Value;
+            string twilioAuthToken = settings[SettingEnum.AUTH_TOKEN].Value;
+            string twilioPhoneNumber = settings[SettingEnum.PHONE_NUMBER].Value;
+            string textMessageReply = settings[SettingEnum.TEXT_MESSAGE].Value;
+
+            SmsService smsService = new SmsService(twilioAccountSID, twilioAuthToken, twilioPhoneNumber);
+
+            foreach (Employee employee in Employees)
+            {
+                string message = textMessageReply;
+                
+                StringBuilder stringBuilder = new StringBuilder();
+
+                stringBuilder.Append($"Sunday: {employee.Sunday.Name}\n");
+                stringBuilder.Append($"Monday: {employee.Monday.Name}\n");
+                stringBuilder.Append($"Tuesday: {employee.Tuesday.Name}\n");
+                stringBuilder.Append($"Wednesday: {employee.Wednesday.Name}\n");
+                stringBuilder.Append($"Thursday: {employee.Thursday.Name}\n");
+                stringBuilder.Append($"Friday: {employee.Friday.Name}\n");
+                stringBuilder.Append($"Saturday: {employee.Saturday.Name}\n");
+
+                message = message.Replace("{employee}", employee.Name);
+                message = message.Replace("{date}", Month);
+                message = message.Replace("{schedule}", stringBuilder.ToString());
+
+                smsService.SendMessage(employee.PhoneNumber, message);
+            }
+            _events.PublishOnUIThread(new SnackBarEventModel("Sent the text messages."));
+        }
+
+        private async Task validateSetting(Dictionary<SettingEnum, ISetting> settings, SettingEnum key)
+        {
+            if (!settings.ContainsKey(key))
+            {
+                Setting setting = new Setting
+                {
+                    Key = key,
+                    Value = ""
+                };
+
+                long id = await _databaseService.CreateSettingAsync(_user, setting);
+                setting.Id = (int)id;
+                settings[key] = setting;
             }
         }
     }

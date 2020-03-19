@@ -20,7 +20,7 @@
             <TextBlock 
             Text="Twilio Account SID" 
             Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-        <TextBox 
+            <TextBox 
             materialDesign:HintAssist.Hint="Account SID"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
             Text="{Binding Path=TwilioAccountSID, UpdateSourceTrigger=PropertyChanged}"/>
@@ -31,8 +31,8 @@
             Text="Twilio Auth Token" 
             Style="{StaticResource MaterialDesignHeadline5TextBlock}" 
             Margin="0 0"/>
-        
-        <TextBox 
+
+            <TextBox 
             materialDesign:HintAssist.Hint="Auth Token"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
             Text="{Binding Path=TwilioAuthToken, UpdateSourceTrigger=PropertyChanged}" />
@@ -48,6 +48,21 @@
             materialDesign:HintAssist.Hint="Phone Number"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
             Text="{Binding Path=TwilioPhoneNumber, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <StackPanel Margin="0 20">
+            <TextBlock 
+            Text="Text Message Format" 
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}" 
+            Margin="0 0"/>
+
+            <TextBox
+                TextWrapping="Wrap"
+                SpellCheck.IsEnabled="True"
+                AcceptsReturn="True"
+                VerticalScrollBarVisibility="Visible"
+                materialDesign:HintAssist.Hint="Use {employee} for the name of the employee&#x0a;Use {date} for the date&#x0a;Use {schedule} for the schedule of the employee"
+                Text="{Binding TextMessageReply}"/>
         </StackPanel>
     </StackPanel>
 </UserControl>
