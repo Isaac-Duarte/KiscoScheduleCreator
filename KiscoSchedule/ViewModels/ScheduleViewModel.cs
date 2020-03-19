@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace KiscoSchedule.ViewModels
@@ -129,7 +130,8 @@ namespace KiscoSchedule.ViewModels
                 }
             });
 
-            NotifyOfPropertyChange(() => Employees);
+
+            CollectionViewSource.GetDefaultView(Employees).Refresh();
 
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
         }

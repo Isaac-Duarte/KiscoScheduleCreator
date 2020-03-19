@@ -18,165 +18,166 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <materialDesign:DialogHost>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        </Grid.ColumnDefinitions>
-
-        <Menu IsMainMenu="True" Grid.Row="0">
-            <MenuItem Header="File" >
-                <MenuItem x:Name="Save" Header="Save" >
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="ContentSave" />
-                    </MenuItem.Icon>
-                </MenuItem>
+            <Menu IsMainMenu="True" Grid.Row="0">
+                <MenuItem Header="File" >
+                    <MenuItem x:Name="Save" Header="Save" >
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="ContentSave" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 
-                <MenuItem x:Name="Export" Header="Export">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Export" />
-                    </MenuItem.Icon>
-                </MenuItem>
+                    <MenuItem x:Name="Export" Header="Export">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="Export" />
+                        </MenuItem.Icon>
+                    </MenuItem>
 
-                <Separator />
+                    <Separator />
                 
-                <MenuItem Header="Text Employees">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="Sms" />
-                    </MenuItem.Icon>
+                    <MenuItem Header="Text Employees">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="Sms" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="Set Template">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon Kind="CalendarMonthOutline" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
+            </Menu>
 
-                <MenuItem Header="Set Template">
-                    <MenuItem.Icon>
-                        <materialDesign:PackIcon Kind="CalendarMonthOutline" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-        </Menu>
+            <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                <DatePicker
+                    SelectedDate="{Binding SelectedDate}"
+                    Margin="10 0"
+                    VerticalAlignment="Center"
+                    Width="100"
+                    materialDesign:HintAssist.Hint="Pick Date"
+                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                    />
+            </StackPanel>
 
-        <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Center" Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-            <DatePicker
-                SelectedDate="{Binding SelectedDate}"
-                Margin="10 0"
-                VerticalAlignment="Center"
-                Width="100"
-                materialDesign:HintAssist.Hint="Pick Date"
-                Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                />
-        </StackPanel>
+            <DataGrid 
+                ItemsSource="{Binding Employees}" 
+                AutoGenerateColumns="False" 
+                Grid.Row="1">
 
-        <DataGrid 
-            ItemsSource="{Binding Employees}" 
-            AutoGenerateColumns="False" 
-            Grid.Row="1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Employee" Binding="{Binding Name}" IsReadOnly="True" />
-
-                <!-- Sunday -->
-                <DataGridTemplateColumn Header="Sunday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox
-                                DisplayMemberPath="Name"
-                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Sunday}" 
-                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Sunday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Sunday -->
-                
-                <!-- Monday -->
-                <DataGridTemplateColumn Header="Monday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox 
-                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Monday}" 
-                                DisplayMemberPath="Name"
-                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Monday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Monday -->
-
-                <!-- Tuesday -->
-                <DataGridTemplateColumn Header="Tuesday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox 
-                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                    SelectedItem="{Binding Tuesday}" 
+                    <!-- Sunday -->
+                    <DataGridTemplateColumn Header="Sunday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
                                     DisplayMemberPath="Name"
-                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Tuesday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Tuesday -->
-
-                <!-- Wednesday -->
-                <DataGridTemplateColumn Header="Wednesday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox 
                                     ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                    SelectedItem="{Binding Wednesday}" 
+                                    SelectedItem="{Binding Sunday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Sunday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Sunday -->
+                
+                    <!-- Monday -->
+                    <DataGridTemplateColumn Header="Monday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                    SelectedItem="{Binding Monday}" 
                                     DisplayMemberPath="Name"
-                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Wednesday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Wednesday -->
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Monday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Monday -->
 
-                <!-- Thursday -->
-                <DataGridTemplateColumn Header="Thursday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox 
-                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Thursday}" 
-                                DisplayMemberPath="Name"
-                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Thursday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Thursday -->
+                    <!-- Tuesday -->
+                    <DataGridTemplateColumn Header="Tuesday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                        ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                        SelectedItem="{Binding Tuesday}" 
+                                        DisplayMemberPath="Name"
+                                        cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Tuesday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Tuesday -->
 
-                <!-- Friday -->
-                <DataGridTemplateColumn Header="Friday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox 
-                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Friday}" 
-                                DisplayMemberPath="Name"
-                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Friday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Friday -->
+                    <!-- Wednesday -->
+                    <DataGridTemplateColumn Header="Wednesday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                        ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                        SelectedItem="{Binding Wednesday}" 
+                                        DisplayMemberPath="Name"
+                                        cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Wednesday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Wednesday -->
 
-                <!-- Saturday -->
-                <DataGridTemplateColumn Header="Saturday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox 
-                                ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
-                                SelectedItem="{Binding Saturday}" 
-                                DisplayMemberPath="Name"
-                                cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Saturday')]"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Saturday -->
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+                    <!-- Thursday -->
+                    <DataGridTemplateColumn Header="Thursday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                    SelectedItem="{Binding Thursday}" 
+                                    DisplayMemberPath="Name"
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Thursday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Thursday -->
+
+                    <!-- Friday -->
+                    <DataGridTemplateColumn Header="Friday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                    SelectedItem="{Binding Friday}" 
+                                    DisplayMemberPath="Name"
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Friday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Friday -->
+
+                    <!-- Saturday -->
+                    <DataGridTemplateColumn Header="Saturday">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox 
+                                    ItemsSource="{x:Static vm:ScheduleViewModel.Shifts}" 
+                                    SelectedItem="{Binding Saturday}" 
+                                    DisplayMemberPath="Name"
+                                    cal:Message.Attach="[Event SelectionChanged] = [Action ComboBoxChange($this, $dataContext, $eventArgs, 'Saturday')]"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Saturday -->
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </materialDesign:DialogHost>
 </UserControl>
