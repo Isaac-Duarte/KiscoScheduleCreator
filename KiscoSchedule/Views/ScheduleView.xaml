@@ -51,7 +51,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
 
-                    <MenuItem Header="Set Template">
+                    <MenuItem x:Name="SetTemplate" Header="Set Template">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="CalendarMonthOutline" />
                         </MenuItem.Icon>
@@ -59,17 +59,7 @@
                 </MenuItem>
             </Menu>
 
-            <StackPanel HorizontalAlignment="Center" Grid.Row="0" Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center" Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-                <DatePicker
-                    SelectedDate="{Binding SelectedDate}"
-                    Margin="10 0"
-                    VerticalAlignment="Center"
-                    Width="100"
-                    materialDesign:HintAssist.Hint="Pick Date"
-                    Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                    />
-            </StackPanel>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Month}" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
 
             <DataGrid 
                 ItemsSource="{Binding Employees}" 

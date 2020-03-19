@@ -210,5 +210,14 @@ namespace KiscoSchedule.ViewModels
             ActivateItem(_container.GetInstance<ShiftsViewModel>());
             LeftDrawerOpen = false;
         }
+
+        /// <summary>
+        /// Shifts page
+        /// </summary>
+        public void TemplateControl()
+        {
+            ActivateItem(_container.GetInstance<TemplateViewModel>());
+            LeftDrawerOpen = false;
+        }
     }
 }

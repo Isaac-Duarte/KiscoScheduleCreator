@@ -45,7 +45,6 @@ namespace KiscoSchedule.ViewModels
 
             // Load the schedule
             loadSchedule();
-            loadSchedule(SelectedDate);
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace KiscoSchedule.ViewModels
             List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user);
 
             await Task.Run(() => Employees.AddRange(newEmployees));
-
+            await loadSchedule(SelectedDate);
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Collapsed));
         }
 
@@ -69,7 +68,7 @@ namespace KiscoSchedule.ViewModels
         /// Loads a certain template
         /// </summary>
         /// <param name="date"></param>
-        private async void loadSchedule(DateTime date)
+        private async Task loadSchedule(DateTime date)
         {
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
 
@@ -333,6 +332,11 @@ namespace KiscoSchedule.ViewModels
                 setting.Id = (int)id;
                 settings[key] = setting;
             }
+        }
+
+        public async void SetTemplate()
+        {
+            await loadSchedule(new DateTime(2003, 6, 13));
         }
     }
 }
