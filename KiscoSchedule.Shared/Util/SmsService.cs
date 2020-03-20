@@ -25,6 +25,8 @@ namespace KiscoSchedule.Shared.Util
             this.accountSid = accountSid;
             this.authToken = authToken;
             this.phoneNumber = phoneNumber;
+
+            TwilioClient.Init(accountSid, authToken);
         }
 
         /// <summary>
@@ -35,13 +37,25 @@ namespace KiscoSchedule.Shared.Util
         /// <returns></returns>
         public async void SendMessage(string number, string message)
         {
-            TwilioClient.Init(accountSid, authToken);
+            if (String.IsNullOrEmpty(number))
+            {
+                return;
 
-            var messageResource = await MessageResource.CreateAsync(
-                body: message,
-                from: new Twilio.Types.PhoneNumber(phoneNumber),
-                to: new Twilio.Types.PhoneNumber(number)
-            );
+            }
+
+            try
+            {
+                
+                await MessageResource.CreateAsync(
+                    body: message,
+                    from: new Twilio.Types.PhoneNumber(phoneNumber),
+                    to: new Twilio.Types.PhoneNumber(number)
+                );
+            }
+            catch
+            {
+
+            }
         }
     }
 }
