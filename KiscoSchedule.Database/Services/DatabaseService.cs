@@ -77,16 +77,6 @@ namespace KiscoSchedule.Database.Services
             command = new SQLiteCommand(queryString, sqliteConnection);
             await command.ExecuteNonQueryAsync();
 
-            // Create Shifts table
-            queryString = @"CREATE TABLE IF NOT EXISTS 'Shifts' (
-	            'Id'	INTEGER PRIMARY KEY AUTOINCREMENT,
-                'UserId'    INTEGER,
-	            'Name'	BLOB
-            );";
-
-            command = new SQLiteCommand(queryString, sqliteConnection);
-            await command.ExecuteNonQueryAsync();
-
         }
 
         /// <summary>
@@ -361,77 +351,6 @@ namespace KiscoSchedule.Database.Services
         {
             SQLiteCommand command = new SQLiteCommand("DELETE FROM Settings Where Id=@Id", sqliteConnection);
             command.Parameters.AddWithValue("Id", setting.Id);
-
-            await command.ExecuteNonQueryAsync();
-        }
-
-        /// <summary>
-        /// Creates a shift async
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="shift"></param>
-        /// <returns></returns>
-        public async Task<long> CreateShiftAsync(IUser user, IShift shift)
-        {
-            SQLiteCommand command = new SQLiteCommand("INSERT INTO Shifts (UserId, Name) VALUES(@UserId, @Name)", sqliteConnection);
-            command.Parameters.AddWithValue("UserId", user.Id);
-            command.Parameters.AddWithValue("Name", cryptoService.EncryptString(shift.Name));
-
-            await command.ExecuteNonQueryAsync();
-            return sqliteConnection.LastInsertRowId;
-        }
-
-        /// <summary>
-        /// Updates a shift given the shift object
-        /// </summary>
-        /// <param name="employee"></param>
-        /// <param name="setting"></param>
-        /// <returns></returns>
-        public async Task UpdateShiftAsync(IShift shift)
-        {
-            SQLiteCommand command = new SQLiteCommand("Update Shifts Set Name = @Name WHERE Id = @Id", sqliteConnection);
-            command.Parameters.AddWithValue("Id", shift.Id);
-            command.Parameters.AddWithValue("Name", cryptoService.EncryptString(shift.Name));
-
-            await command.ExecuteNonQueryAsync();
-        }
-
-         /// <summary>
-        /// Returns a list of the settings
-        /// </summary>
-        /// <param name="employee"></param>
-        /// <returns></returns>
-        public async Task<List<IShift>> GetShiftsAsync(IUser user)
-        {
-            SQLiteCommand command = new SQLiteCommand("SELECT * FROM Shifts Where UserId=@UserId", sqliteConnection);
-            command.Parameters.AddWithValue("UserId", user.Id);
-
-            DbDataReader dataReader = await command.ExecuteReaderAsync();
-
-            List<IShift> shifts = new List<IShift>();
-            
-            while (dataReader.Read())
-            {
-                shifts.Add(new Shift
-                {
-                    Id = dataReader.GetInt32(0),
-                    UserId = dataReader.GetInt32(1),
-                    Name = cryptoService.DecryptBytesToString((byte[])dataReader["Name"])
-                });
-            }
-
-            return shifts;
-        }
-
-        /// <summary>
-        /// Removes a shift given the shift object
-        /// </summary>
-        /// <param name="setting"></param>
-        /// <returns></returns>
-        public async Task RemoveShiftsAsync(IShift shift)
-        {
-            SQLiteCommand command = new SQLiteCommand("DELETE FROM Shifts Where Id=@Id", sqliteConnection);
-            command.Parameters.AddWithValue("Id", shift.Id);
 
             await command.ExecuteNonQueryAsync();
         }

@@ -9,18 +9,15 @@ namespace KiscoSchedule.Shared.Models
     public interface IShift
     {
         /// <summary>
-        /// SQLite Id of the shift
+        /// The start of the shift
         /// </summary>
-        long Id { get; set; }
+        DateTime Start { get; set; }
 
         /// <summary>
-        /// The Id of the parent
+        /// The end of the shift
         /// </summary>
-        int UserId { get; set; }
+        DateTime End { get; set; }
 
-        /// <summary>
-        /// The name of the shift
-        /// </summary>
-        string Name { get; set; }
+        string Name { get; }
     }
 }

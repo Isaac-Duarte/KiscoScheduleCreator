@@ -5,6 +5,8 @@ using KiscoSchedule.Services;
 using KiscoSchedule.Shared.Enums;
 using KiscoSchedule.Shared.Models;
 using KiscoSchedule.Shared.Util;
+using KiscoSchedule.Views;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,6 @@ namespace KiscoSchedule.ViewModels
         private IEventAggregator _events;
         private IUser _user;
         private AsyncObservableCollection<IEmployee> employees;
-        private static AsyncObservableCollection<IShift> shifts;
         private DateTime selectedDate;
         private ISchedule schedule;
 
@@ -53,8 +54,6 @@ namespace KiscoSchedule.ViewModels
         private async void loadSchedule()
         {
             _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
-            // Load shifts
-            Shifts = new AsyncObservableCollection<IShift>(await _databaseService.GetShiftsAsync(_user));
 
             // Load employees
             List<IEmployee> newEmployees = await _databaseService.GetEmployeesAsync(_user);
@@ -83,22 +82,21 @@ namespace KiscoSchedule.ViewModels
                 schedule.Id = (int)await _databaseService.CreateScheduleAsync(_user, schedule);
             }
 
-            await Task.Run(() =>
+            await Task.Run(() => 
             {
-                _events.PublishOnUIThread(new ProgressEventModel(Visibility.Visible));
                 foreach (IEmployee employee in Employees)
                 {
                     if (schedule.Shifts.ContainsKey((int)employee.Id))
                     {
                         try
                         {
-                            employee.Sunday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Sunday]).FirstOrDefault();
-                            employee.Monday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Monday]).FirstOrDefault();
-                            employee.Tuesday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Tuesday]).FirstOrDefault();
-                            employee.Wednesday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Wednesday]).FirstOrDefault();
-                            employee.Thursday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Thursday]).FirstOrDefault();
-                            employee.Friday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Friday]).FirstOrDefault();
-                            employee.Saturday = Shifts.Where(x => x.Id == schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Saturday]).FirstOrDefault();
+                            employee.Sunday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Sunday];
+                            employee.Monday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Monday];
+                            employee.Tuesday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Tuesday];
+                            employee.Wednesday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Wednesday];
+                            employee.Thursday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Thursday];
+                            employee.Friday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Friday];
+                            employee.Saturday = schedule.Shifts[(int)employee.Id].Shifts[DayOfWeek.Saturday];
                         }
                         catch
                         {
@@ -109,24 +107,8 @@ namespace KiscoSchedule.ViewModels
                     {
                         schedule.Shifts[(int)employee.Id] = new ShiftTemplate
                         {
-                            Shifts = new Dictionary<DayOfWeek, int>()
+                            Shifts = new Dictionary<DayOfWeek, Shift>()
                         };
-
-                        if (Shifts.Count > 0)
-                        {
-                            employee.Sunday = Shifts[0];
-                            employee.Monday = Shifts[0];
-                            employee.Tuesday = Shifts[0];
-                            employee.Wednesday = Shifts[0];
-                            employee.Thursday = Shifts[0];
-                            employee.Friday = Shifts[0];
-                            employee.Saturday = Shifts[0];
-
-                            foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-                            {
-                                schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
-                            }
-                        }
                     }
                 }
             });
@@ -146,18 +128,6 @@ namespace KiscoSchedule.ViewModels
             {
                 employees = value;
                 NotifyOfPropertyChange(() => Employees);
-            }
-        }
-
-        /// <summary>
-        /// A collection of the user's sihfts
-        /// </summary>
-        static public AsyncObservableCollection<IShift> Shifts
-        {
-            get { return shifts; }
-            set
-            {
-                shifts = value;
             }
         }
 
@@ -190,29 +160,17 @@ namespace KiscoSchedule.ViewModels
             }
         }
 
-        public void ComboBoxChange(object sender, object dataContext, SelectionChangedEventArgs args, DayOfWeek day)
+        public async void ChangeShift(object sender, object dataContext, DayOfWeek day)
         {
-            IEmployee employee = (Employee)dataContext;
-            IShift shift = (Shift)sender;
+            IEmployee employee = (IEmployee)dataContext;
+            
+            var view = new ShiftDialog();
 
-            if (!schedule.Shifts.ContainsKey((int)employee.Id))
-            {
-                schedule.Shifts[(int)employee.Id] = new ShiftTemplate
-                {
-                    Shifts = new Dictionary<DayOfWeek, int>()
-                };
+            view.DataContext = new ShiftDialogModel(ref schedule, employee, day);
 
-                if (Shifts.Count > 0)
-                {
-                    foreach (DayOfWeek dayOfWeek in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-                    {
-                        schedule.Shifts[(int)employee.Id].Shifts[dayOfWeek] = (int)Shifts[0].Id;
-                    }
-                }
-            }
-
-            schedule.Shifts[(int)employee.Id].Shifts[day] = (int)shift.Id;
+            await DialogHost.Show(view);
         }
+
 
         public async void Save()
         {

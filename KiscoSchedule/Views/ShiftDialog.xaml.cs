@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace KiscoSchedule.Views
 {
     /// <summary>
-    /// Interaction logic for ShiftsView.xaml
+    /// Interaction logic for ShiftDialog.xaml
     /// </summary>
-    public partial class ShiftsView : UserControl
+    public partial class ShiftDialog : UserControl
     {
-        public ShiftsView()
+        public ShiftDialog()
         {
             InitializeComponent();
         }

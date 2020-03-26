@@ -9,18 +9,26 @@ namespace KiscoSchedule.Shared.Models
     public class Shift : IShift
     {
         /// <summary>
-        /// SQLite Id of the shift
+        /// The start of the shift
         /// </summary>
-        public long Id { get; set; }
+        public DateTime Start { get; set; }
 
         /// <summary>
-        /// The Id of the parent
+        /// The end of the shift
         /// </summary>
-        public int UserId { get; set; }
+        public DateTime End { get; set; }
 
-        /// <summary>
-        /// The name of the shift
-        /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                if (Start == null || End == null)
+                {
+                    return "xx";
+                }
+
+                return $"{Start.ToString("t")} - {End.ToString("t")}";
+            }
+        }
     }
 }

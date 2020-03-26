@@ -1,9 +1,9 @@
 ﻿using Caliburn.Micro;
 using KiscoSchedule.Database.Services;
-using KiscoSchedule.Shared.Util;
-using KiscoSchedule.Shared.Models;
-using MaterialDesignThemes.Wpf;
 using KiscoSchedule.EventModels;
+using KiscoSchedule.Shared.Models;
+using KiscoSchedule.Shared.Util;
+using MaterialDesignThemes.Wpf;
 using System.Windows;
 
 namespace KiscoSchedule.ViewModels
@@ -91,7 +91,7 @@ namespace KiscoSchedule.ViewModels
         /// Visibility of the progress bar
         /// </summary>
         public Visibility ProgressVisibility
-        { 
+        {
             get { return progressVisibility; }
             set
             {
@@ -201,16 +201,6 @@ namespace KiscoSchedule.ViewModels
             ActivateItem(_container.GetInstance<SettingsViewModel>());
             LeftDrawerOpen = false;
         }
-
-        /// <summary>
-        /// Shifts page
-        /// </summary>
-        public void ShiftsControl()
-        {
-            ActivateItem(_container.GetInstance<ShiftsViewModel>());
-            LeftDrawerOpen = false;
-        }
-
         /// <summary>
         /// Shifts page
         /// </summary>

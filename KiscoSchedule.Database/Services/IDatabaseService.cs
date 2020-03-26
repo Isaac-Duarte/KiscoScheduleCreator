@@ -124,36 +124,6 @@ namespace KiscoSchedule.Database.Services
         Task RemoveSettingAsync(ISetting setting);
 
         /// <summary>
-        /// Creates a shift async
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="shift"></param>
-        /// <returns></returns>
-        Task<long> CreateShiftAsync(IUser user, IShift shift);
-
-        /// <summary>
-        /// Updates a shift given the shift object
-        /// </summary>
-        /// <param name="employee"></param>
-        /// <param name="setting"></param>
-        /// <returns></returns>
-        Task UpdateShiftAsync(IShift shift);
-
-        /// <summary>
-        /// Returns a list of the settings
-        /// </summary>
-        /// <param name="employee"></param>
-        /// <returns></returns>
-        Task<List<IShift>> GetShiftsAsync(IUser user);
-
-        /// <summary>
-        /// Removes a shift given the shift object
-        /// </summary>
-        /// <param name="setting"></param>
-        /// <returns></returns>
-        Task RemoveShiftsAsync(IShift shift);
-
-        /// <summary>
         /// Creates a Schedule async
         /// </summary>
         /// <param name="user"></param>

@@ -22,11 +22,11 @@ namespace KiscoSchedule.Shared.Models
 
     public class ShiftTemplate : IShiftTemplate
     {
-        public Dictionary<DayOfWeek, int> Shifts { get; set; }
+        public Dictionary<DayOfWeek, Shift> Shifts { get; set; }
     }
 
     public interface IShiftTemplate
     {
-        Dictionary<DayOfWeek, int> Shifts { get; set; }
+        Dictionary<DayOfWeek, Shift> Shifts { get; set; }
     }
 }
